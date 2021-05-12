@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  mongo:
+    image: "${DOCKER_USERNAME}/mongo"
+    ports:
+      - "27018:27017"
+    restart: always
+    volumes:
+      - ${DB_PATH}:/data/db
+      - ${LOG_PATH}:/data/log
+    networks:
+      - mongo
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+networks:
+  mongo:
+    driver: bridge

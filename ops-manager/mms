@@ -1,0 +1,40 @@
+#!/bin/bash
+source ./config.sh
+
+if [ ! -d "$DB_VOLUME" ]; then
+    echo "DB folder doesn't exist: $DB_VOLUME"
+    exit 127
+fi
+
+if [ ! -d "$OM_MONGO_RELEASES" ]; then
+    echo "Ops Manager MongoDB releases folder doesn't exist: $OM_MONGO_RELEASES"
+    exit 127
+fi
+
+if [ ! -d "$OM_LOGS" ]; then
+    echo "Ops Manager logs folder doesn't exist: $OM_LOGS"
+    exit 127
+fi
+
+start() {
+    docker-compose up -d
+}
+
+stop() {
+    docker-compose down
+}
+
+restart() {
+  stop
+  start
+}
+
+case "$1" in
+    start|stop|restart)
+        $1
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|restart}"
+        exit 2
+        ;;
+esac

@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  appdb:
+    image: "${DOCKER_USERNAME}/mongo-enterprise:${MONGODB_VERSION}"
+    restart: always
+    volumes:
+      - ${DB_VOLUME}:/data/db
+    networks:
+      - opsmanager
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+  opsmanager:
+    image: "${DOCKER_USERNAME}/ops-manager:${OM_VERSION}"
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - ${OM_MONGO_RELEASES}:/opt/mongodb/mms/mongodb-releases
+      - ${OM_LOGS}:/opt/mongodb/mms/logs
+    networks:
+      - opsmanager
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 6G
+networks:
+  opsmanager:
+    driver: bridge
