@@ -14,6 +14,8 @@ The MongoDB deployment image is built:
 - Based on Ubuntu `18.06` image
 - Automation Agent is installed
 
+Note the MongoDB here relies on Ops Manager to start. For now only 1 instance of MongoDB can be started.
+
 ## Configuration
 
 All configurations can be found in the following 3 files:
@@ -47,7 +49,7 @@ All configurations can be found in the following 3 files:
 git clone https://github.com/zhangyaoxing/dockerized-mongodb-ent.git
 ```
 
-- Change configuration
+### Ops Manager
 
 - Build images:
 
@@ -67,3 +69,34 @@ cd dockerized-mongodb-ent/ops-manager
 ```bash
 ./mms stop
 ```
+
+- Clean up
+
+```bash
+./clean.sh
+```
+
+### MongoDB
+
+- Build image:
+
+```bash
+cd dockerized-mongodb-ent/mongo
+./build.sh
+```
+
+- Start MongoDB
+
+```bash
+docker-compose up -d
+```
+
+- Stop MongoDB
+
+```bash
+docker-compose down
+```
+
+### Known Issues
+
+1. On MacOS by default docker will use only 2GB RAM. However, Ops Manager requires at least 4GB to start (recommended 6GB). Please adjust RAM limit in `Settings->Resources->Advanced`
