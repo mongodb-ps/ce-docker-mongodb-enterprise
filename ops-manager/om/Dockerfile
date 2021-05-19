@@ -11,7 +11,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN chmod +x ./bootstrap.sh && ./bootstrap.sh
 
 # Define mountable directories.
-VOLUME ["/opt/mongodb/mms/logs", "/opt/mongodb/mms/mongodb-releases"]
+VOLUME ["/opt/mongodb/mms/logs", "/opt/mongodb/mms/mongodb-releases", "/headDB", "/snapshots"]
 
 # Define default command.
 CMD "/startup.sh"

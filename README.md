@@ -30,6 +30,8 @@ All configurations can be found in the following 3 files:
   - `MONGO_INITDB_ROOT_PASSWORD`: Initial admin password. DO CHANGE THE PASSWORD!
   - `DB_VOLUME`: Host folder for storing AppDB data files.
   - `OM_MONGO_RELEASES`: Host folder for storing Ops Manager MongoDB releases.
+  - `OM_SNAPSHOTS`: Host folder for storing backup snapshots
+  - `OM_HEADDB`: Host folder for storing headDB
   - `OM_LOGS`: Host folder for storing Ops Manager logs.
 - `mongo/config.sh`: parameters that's used by MongoDB deployment.
   - `GROUP_ID`: group/project ID in Ops Manager. This is where in Ops Manager you want to create the MongoDB cluster.
@@ -88,13 +90,13 @@ cd dockerized-mongodb-ent/mongo
 - Start MongoDB
 
 ```bash
-docker-compose up -d
+./mongo start
 ```
 
 - Stop MongoDB
 
 ```bash
-docker-compose down
+./mongo stop
 ```
 
 ### Known Issues

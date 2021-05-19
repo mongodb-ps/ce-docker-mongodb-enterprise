@@ -6,8 +6,10 @@ export OM_URL=https://downloads.mongodb.com/on-prem-mms/deb/mongodb-mms_4.4.12.1
 export MONGO_INITDB_ROOT_USERNAME=root # Initial admin account name for AppDB.
 export MONGO_INITDB_ROOT_PASSWORD=V4ei2VZrIuHY # Initial admin password. DO CHANGE THE PASSWORD!
 export DB_VOLUME=~/Workspace/MongoDB/appdb # Host folder for storing AppDB data files
-export OM_MONGO_RELEASES=~/Workspace/MongoDB/mongodb-releases # host folder for storing Ops Manager MongoDB releases.
-export OM_LOGS=~/Workspace/MongoDB/om_logs # host folder for storing Ops Manager logs
+export OM_MONGO_RELEASES=~/Workspace/MongoDB/mongodb-releases # Host folder for storing Ops Manager MongoDB releases.
+export OM_SNAPSHOTS=~/Workspace/MongoDB/snapshots/ # Host folder for storing backup snapshots
+export OM_HEADDB=~/Workspace/MongoDB/headDB/ # Host folder for storing headDB
+export OM_LOGS=~/Workspace/MongoDB/om_logs # Host folder for storing Ops Manager logs
 
 # extract OM package name and version from OM_URL
 # DO NOT MODIFY

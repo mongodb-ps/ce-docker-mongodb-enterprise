@@ -23,6 +23,8 @@ services:
     volumes:
       - ${OM_MONGO_RELEASES}:/opt/mongodb/mms/mongodb-releases
       - ${OM_LOGS}:/opt/mongodb/mms/logs
+      - ${OM_SNAPSHOTS}:/snapshots
+      - ${OM_HEADDB}:/headDB
     networks:
       - opsmanager
     deploy:
