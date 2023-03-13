@@ -5,16 +5,19 @@
 Dockerized MongoDB and Ops Manager.
 The Ops Manager is built using:
 
-- Ops Manager: `4.4.12`
-- AppDB: MongoDB `4.4:latest`
+- Ops Manager: `6.0.10`
+- AppDB: MongoDB `6.0:latest`
 - TODO: Blockstore
 
 The MongoDB deployment image is built:
 
-- Based on Ubuntu `18.06` image
+- Based on ubuntu:jammy image
 - Automation Agent is installed
 
 Note the MongoDB here relies on Ops Manager to start. For now only 1 instance of MongoDB can be started.
+
+## How does it work
+Ops Manager doesn't provide precompiled version for ARM64 platform thus can't be run on Macbook M1/M2 series. However, Ops Manager is a Java application, which can run on ARM64 platform. The only problem is the JDK included in the package is for AMD64. The script used Ops Manager for Ubuntu, removed `jdk` folder, then link ARM64 openjdk-11 as new jdk. This is enough to resolve the platform issue.
 
 ## Configuration
 
@@ -101,4 +104,4 @@ cd dockerized-mongodb-ent/mongo
 
 ### Known Issues
 
-1. On MacOS by default docker will use only 2GB RAM. However, Ops Manager requires at least 4GB to start (recommended 6GB). Please adjust RAM limit in `Settings->Resources->Advanced`
+1. On MacOS by default docker will use only 2GB RAM. However, Ops Manager requires at least 4GB to start (recommended 6GB). Please adjust RAM limit in `Settings->Resources->Advanced` accordingly.

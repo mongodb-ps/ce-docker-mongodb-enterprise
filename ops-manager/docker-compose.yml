@@ -3,6 +3,8 @@ services:
   appdb:
     image: "${DOCKER_USERNAME}/mongo-enterprise:${MONGODB_VERSION}"
     restart: always
+    ports:
+      - "29017:27017"
     volumes:
       - ${DB_VOLUME}:/data/db
     networks:
@@ -21,8 +23,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ${OM_MONGO_RELEASES}:/opt/mongodb/mms/mongodb-releases
-      - ${OM_LOGS}:/opt/mongodb/mms/logs
+      - ${OM_MONGO_RELEASES}:/mongodb-mms/mongodb-releases
+      - ${OM_LOGS}:/mongodb-mms/logs
       - ${OM_SNAPSHOTS}:/snapshots
       - ${OM_HEADDB}:/headDB
     networks:
