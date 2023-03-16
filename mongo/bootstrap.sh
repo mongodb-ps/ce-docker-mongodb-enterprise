@@ -10,8 +10,8 @@ yum install -y cyrus-sasl cyrus-sasl-gssapi cyrus-sasl-plain krb5-libs net-snmp 
 echo "The following parameters are used: $OM_URL,$PROJECT_ID,$API_KEY"
 unset http_proxy
 unset https_proxy
-curl -OL $OM_URL/download/agent/automation/mongodb-mms-automation-agent-manager-12.0.18.7668-1.aarch64.amzn2.rpm
-rpm -ivh mongodb-mms-automation-agent-manager-12.0.18.7668-1.aarch64.amzn2.rpm
+curl -OL $AA_URL
+rpm -ivh *.rpm
 sed -i "s%mmsGroupId=.*%mmsGroupId=$PROJECT_ID%" /etc/mongodb-mms/automation-agent.config
 sed -i "s%mmsApiKey=.*%mmsApiKey=$API_KEY%" /etc/mongodb-mms/automation-agent.config
 sed -i "s%mmsBaseUrl=.*%mmsBaseUrl=$OM_URL%" /etc/mongodb-mms/automation-agent.config
