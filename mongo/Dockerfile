@@ -1,9 +1,9 @@
 # Pull base image.
-FROM ubuntu:18.04
+FROM centos:8
 
 ARG OM_URL
 ARG API_KEY
-ARG ORG_ID
+ARG PROJECT_ID
 ADD bootstrap.sh /
 ADD startup.sh /
 ENV DEBIAN_FRONTEND=noninteractive

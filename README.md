@@ -11,10 +11,10 @@ The Ops Manager is built using:
 
 The MongoDB deployment image is built:
 
-- Based on `ubuntu:jammy` image
+- Based on `centos:8` image
 - Automation Agent is installed
 
-Note the MongoDB here relies on Ops Manager to start. For now only 1 instance of MongoDB can be started.
+Note the MongoDB relies on Ops Manager to start. For now only 1 instance of MongoDB can be started.
 
 ## How does it work
 Ops Manager doesn't provide pre-compiled version for ARM64 platform thus can't be run on Macbook M1/M2 series. However, Ops Manager is a Java application, which is capable to run on ARM64 platform. The only problem is the JDK included in the package is for x86_64 platform. The script uses the pre-compiled Ops Manager package for Ubuntu, removes `jdk` folder, then link ARM64 openjdk-11 as a replacement. This is enough to resolve the jdk issue.

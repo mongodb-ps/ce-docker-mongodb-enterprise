@@ -1,0 +1,25 @@
+#!/bin/bash
+source ./config.sh
+
+start() {
+    docker-compose up -d
+}
+
+stop() {
+    docker-compose down
+}
+
+restart() {
+  stop
+  start
+}
+
+case "$1" in
+    start|stop|restart)
+        $1
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|restart}"
+        exit 2
+        ;;
+esac
