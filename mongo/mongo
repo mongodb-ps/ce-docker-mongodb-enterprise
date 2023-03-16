@@ -2,7 +2,7 @@
 source ./config.sh
 
 start() {
-    docker-compose up -d
+    docker-compose up --scale mongo=$INSTANCES -d 
 }
 
 stop() {

@@ -1,20 +1,21 @@
 # MongoDB & Ops Manager Docker Image
 
 ## Summary
-**The images are for testing purpose only**
-This is the script to build MongoDB and Ops Manager docker image.
+**The images are for testing purpose only. DO NOT use in production!**
+This is the script for building MongoDB and Ops Manager docker image.
 The Ops Manager is built using:
 
 - Ops Manager: `6.0.10`
 - AppDB: MongoDB `6.0:latest`
 - TODO: Blockstore
+- Base image is `ubuntu:jammy`
 
 The MongoDB deployment image is built:
 
 - Based on `centos:8` image
 - Automation Agent is installed
 
-Note the MongoDB relies on Ops Manager to start. For now only 1 instance of MongoDB can be started.
+Note the MongoDB relies on Ops Manager to start.
 
 ## How does it work
 Ops Manager doesn't provide pre-compiled version for ARM64 platform thus can't be run on Macbook M1/M2 series. However, Ops Manager is a Java application, which is capable to run on ARM64 platform. The only problem is the JDK included in the package is for x86_64 platform. The script uses the pre-compiled Ops Manager package for Ubuntu, removes `jdk` folder, then link ARM64 openjdk-11 as a replacement. This is enough to resolve the jdk issue.
@@ -37,21 +38,17 @@ All configurations can be found in the following 3 files.
   - `OM_HEADDB`: Host folder for storing headDB
   - `OM_LOGS`: Host folder for storing Ops Manager logs.
 - `mongo/config.sh`: parameters that's used by MongoDB deployment.
-  - `GROUP_ID`: group/project ID in Ops Manager. This is where in Ops Manager you want to create the MongoDB cluster.
+  - `PROJECT_ID`: group/project ID in Ops Manager. This is where in Ops Manager you want to create the MongoDB cluster.
   - `API_KEY`: API KEY used by Ops Manager Automation Agent.
   - `OM_URL`: Ops Manager URL.
   - `AA_URL`: Automation Agent download URL.
-  - `DB_PATH`: folder on host where you want to store data files.
-  - `LOG_PATH`: folder on host where you want to store log files.
-  - `DB_HOSTNAME`: hostname for container. The host name must be resolvable and resolve to the docker host.
-  - `DB_PORT`: the port used by MongoDB node.
 
 ## Usage
 
 - Clone this repository:
 
 ```bash
-git clone https://github.com/zhangyaoxing/ce-docker-mongodb-enterprise.git
+git clone https://github.com/mongodb-ps/ce-docker-mongodb-enterprise.git
 ```
 
 ### Ops Manager
@@ -93,7 +90,8 @@ cd ce-docker-mongodb-enterprise/mongo
 - Start MongoDB
 
 ```bash
-./mongo start
+# This will start 3 containers
+./mongo start 3
 ```
 
 - Stop MongoDB

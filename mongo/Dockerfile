@@ -4,6 +4,7 @@ FROM centos:8
 ARG OM_URL
 ARG API_KEY
 ARG PROJECT_ID
+ARG AA_URL
 ADD bootstrap.sh /
 ADD startup.sh /
 ENV DEBIAN_FRONTEND=noninteractive

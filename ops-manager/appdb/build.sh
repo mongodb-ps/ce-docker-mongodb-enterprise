@@ -3,9 +3,9 @@
 cd appdb
 if [ -z `docker images -q $DOCKER_USERNAME/mongo-enterprise:$MONGODB_VERSION` ]; then
     # image doesn't exist, build one.
-    echo "Building MongoDB Enterprise image."
-    curl -OL --remote-name-all https://raw.githubusercontent.com/docker-library/mongo/master/$MONGODB_VERSION/{Dockerfile,docker-entrypoint.sh}
-    chmod +x docker-entrypoint.sh
+    echo "Building MongoDB Enterprise image."; \
+    curl -OL --remote-name-all https://raw.githubusercontent.com/docker-library/mongo/master/$MONGODB_VERSION/{Dockerfile,docker-entrypoint.sh}; \
+    chmod +x docker-entrypoint.sh; \
     docker build --build-arg MONGO_PACKAGE=mongodb-enterprise \
         --build-arg MONGO_REPO=repo.mongodb.com \
         --build-arg http_proxy=$_HTTP_PROXY \
