@@ -1,8 +1,8 @@
-# dockerized-mongodb
+# MongoDB & Ops Manager Docker Image
 
 ## Summary
-
-Dockerized MongoDB and Ops Manager.
+**The images are for testing purpose only**
+This is the script to build MongoDB and Ops Manager docker image.
 The Ops Manager is built using:
 
 - Ops Manager: `6.0.10`
@@ -11,17 +11,17 @@ The Ops Manager is built using:
 
 The MongoDB deployment image is built:
 
-- Based on ubuntu:jammy image
+- Based on `ubuntu:jammy` image
 - Automation Agent is installed
 
 Note the MongoDB here relies on Ops Manager to start. For now only 1 instance of MongoDB can be started.
 
 ## How does it work
-Ops Manager doesn't provide precompiled version for ARM64 platform thus can't be run on Macbook M1/M2 series. However, Ops Manager is a Java application, which can run on ARM64 platform. The only problem is the JDK included in the package is for AMD64. The script used Ops Manager for Ubuntu, removed `jdk` folder, then link ARM64 openjdk-11 as new jdk. This is enough to resolve the platform issue.
+Ops Manager doesn't provide pre-compiled version for ARM64 platform thus can't be run on Macbook M1/M2 series. However, Ops Manager is a Java application, which is capable to run on ARM64 platform. The only problem is the JDK included in the package is for x86_64 platform. The script uses the pre-compiled Ops Manager package for Ubuntu, removes `jdk` folder, then link ARM64 openjdk-11 as a replacement. This is enough to resolve the jdk issue.
 
 ## Configuration
 
-All configurations can be found in the following 3 files:
+All configurations can be found in the following 3 files.
 
 - `config.sh`: common parameters that MongoDB and Ops Manager shares.
   - `DOCKER_USERNAME`: Used as the docker image responsitory name.
@@ -51,7 +51,7 @@ All configurations can be found in the following 3 files:
 - Clone this repository:
 
 ```bash
-git clone https://github.com/zhangyaoxing/dockerized-mongodb-ent.git
+git clone https://github.com/zhangyaoxing/ce-docker-mongodb-enterprise.git
 ```
 
 ### Ops Manager
@@ -59,7 +59,7 @@ git clone https://github.com/zhangyaoxing/dockerized-mongodb-ent.git
 - Build images:
 
 ```bash
-cd dockerized-mongodb-ent/ops-manager
+cd ce-docker-mongodb-enterprise/ops-manager
 ./build.sh
 ```
 
@@ -75,7 +75,7 @@ cd dockerized-mongodb-ent/ops-manager
 ./mms stop
 ```
 
-- Clean up
+- Clean up the images
 
 ```bash
 ./clean.sh
@@ -86,7 +86,7 @@ cd dockerized-mongodb-ent/ops-manager
 - Build image:
 
 ```bash
-cd dockerized-mongodb-ent/mongo
+cd ce-docker-mongodb-enterprise/mongo
 ./build.sh
 ```
 
@@ -104,4 +104,4 @@ cd dockerized-mongodb-ent/mongo
 
 ### Known Issues
 
-1. On MacOS by default docker will use only 2GB RAM. However, Ops Manager requires at least 4GB to start (recommended 6GB). Please adjust RAM limit in `Settings->Resources->Advanced` accordingly.
+1. Ops Manager requires at least 4GB to start (recommended 6GB). Adjust RAM limit in `Settings->Resources->Advanced` accordingly if necessary.
