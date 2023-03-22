@@ -77,6 +77,8 @@ cd ce-docker-mongodb-enterprise/ops-manager
 ```bash
 ./clean.sh
 ```
+Tips: 
+1. Use `http://host.docker.internal:8080` as OM URL, which always maps to docker host, can make things easier in the following steps.
 
 ### MongoDB
 
@@ -100,6 +102,13 @@ cd ce-docker-mongodb-enterprise/mongo
 ./mongo stop
 ```
 
+Tips:
+1. After restarting docker service, the IP addresses may change which may confuse OM and cause monitoring issues. Go to More->Host Mappings and clear all mappings can resolve the issue.
+
 ### Known Issues
 
 1. Ops Manager requires at least 4GB to start (recommended 6GB). Adjust RAM limit in `Settings->Resources->Advanced` accordingly if necessary.
+1. On my M1 sometimes docker service crash for no reason and can't even be restarted. This seems like a unresolved issue https://github.com/docker/for-mac/issues/5283The. The following command can help you kill docker:
+```bash
+kill `ps aux | grep docker | awk '{print $2}'`
+```
