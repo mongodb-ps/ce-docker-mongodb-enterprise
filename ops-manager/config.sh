@@ -2,7 +2,7 @@
 
 source ../config.sh
 export MONGODB_VERSION=6.0 # AppDB MongoDB version
-export OM_URL=https://downloads.mongodb.com/on-prem-mms/tar/mongodb-mms-6.0.10.100.20230228T0344Z.tar.gz # Ops Manager binary download URL
+export OM_URL=https://downloads.mongodb.com/on-prem-mms/tar/mongodb-mms-6.0.20.100.20231102T2129Z.tar.gz
 export MONGO_INITDB_ROOT_USERNAME=root # Initial admin account name for AppDB.
 export MONGO_INITDB_ROOT_PASSWORD=V4ei2VZrIuHY # Initial admin password. DO CHANGE THE PASSWORD!
 export DB_VOLUME=~/Workspace/MongoDB/appdb # Host folder for storing AppDB data files
