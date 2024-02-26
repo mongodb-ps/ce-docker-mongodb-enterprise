@@ -2,10 +2,11 @@
 
 ## Summary
 **The images are for testing purpose only. DO NOT use in production!**
+**The images are tested on Mac ARM series platforms. Other platforms are not tested.**
 This is the script for building MongoDB and Ops Manager docker image.
 The Ops Manager is built using:
 
-- Ops Manager: `6.0.10`
+- Ops Manager: `6.0.20`
 - AppDB: MongoDB `6.0:latest`
 - TODO: Blockstore
 - Base image is `ubuntu:jammy`
@@ -24,7 +25,7 @@ Ops Manager doesn't provide pre-compiled version for ARM64 platform thus can't b
 
 All configurations can be found in the following 3 files.
 
-- `config.sh`: common parameters that MongoDB and Ops Manager shares.
+- `config.sh`: common configurations that MongoDB and Ops Manager shares.
   - `DOCKER_USERNAME`: Used as the docker image responsitory name.
   - `_HTTP_PROXY` / `_HTTPS_PROXY`: Proxy if availalbe.
 - `ops-manager/config.sh`: Ops Manager config.
