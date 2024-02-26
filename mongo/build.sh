@@ -14,6 +14,7 @@ if [ -z "`docker images -q $DOCKER_USERNAME/mongo`" ]; then
             --build-arg AA_URL=$AA_URL \
             --build-arg http_proxy=$_HTTP_PROXY \
             --build-arg https_proxy=$_HTTPS_PROXY \
+            # --progress plain \
             ./ -t $DOCKER_USERNAME/mongo
 else
     echo "MongoDB image already exists. Skip building."

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 source ../config.sh
-export PROJECT_ID="65aa42b50bcd081ed446e6df" # mmsGroupId in Ops Manager
-export API_KEY="65b225b81f8e74441a8bebd61bd12b6ea9da8659a58092dc7867b9b0" # mmsApiKey in Ops Manager
+export PROJECT_ID="65dc76bbd6573901883838a2" # mmsGroupId in Ops Manager
+export API_KEY="65dc79ded657390188384157a68b0f8a8088d1901e92b0dff45b9d05" # mmsApiKey in Ops Manager
 export OM_URL="http://host.docker.internal:8080" # mmsBaseUrl in Ops Manager
-export AA_URL="$OM_URL/download/agent/automation/mongodb-mms-automation-agent-manager-12.0.28.7763-1.aarch64.amzn2.rpm"
-export INSTANCES=3
+export AA_URL="$OM_URL/download/agent/automation/mongodb-mms-automation-agent-manager_107.0.2.8531-1_aarch64.ubuntu2204.deb"
+export INSTANCES=3 # Instances you need.

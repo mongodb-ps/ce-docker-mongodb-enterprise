@@ -1,5 +1,5 @@
 # Pull base image.
-FROM centos:8
+FROM ubuntu:jammy
 
 ARG OM_URL
 ARG API_KEY
