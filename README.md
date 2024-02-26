@@ -2,7 +2,9 @@
 
 ## Summary
 **The images are for testing purpose only. DO NOT use in production!**
+
 **The images are tested on Mac ARM series platforms. Other platforms are not tested.**
+
 This is the script for building MongoDB and Ops Manager docker image.
 The Ops Manager is built using:
 
