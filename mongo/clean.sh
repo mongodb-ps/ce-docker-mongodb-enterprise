@@ -2,3 +2,4 @@
 
 source config.sh
 docker image rm $DOCKER_USERNAME/mongo
+docker volume prune
