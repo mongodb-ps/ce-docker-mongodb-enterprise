@@ -1,21 +1,20 @@
 # MongoDB & Ops Manager Docker Image
 
 ## Summary
-**The images are for testing purpose only. DO NOT use in production!**
-
+**The images are for testing purpose only. DO NOT use in production!**  
 **The images are tested on Mac ARM series platforms. Other platforms are not tested.**
 
 This is the script for building MongoDB and Ops Manager docker image.
 The Ops Manager is built using:
 
 - Ops Manager: `7.0.2`
-- AppDB: MongoDB `6.0:latest`
+- AppDB: MongoDB `7.0:latest`
 - TODO: Blockstore
 - Base image is `ubuntu:jammy`
 
 The MongoDB deployment image is built:
 
-- Based on `centos:8` image
+- Based on `ubuntu:jammy` image
 - Automation Agent is installed
 
 Note the MongoDB relies on Ops Manager to start.
@@ -45,6 +44,7 @@ All configurations can be found in the following 3 files.
   - `API_KEY`: API KEY used by Ops Manager Automation Agent.
   - `OM_URL`: Ops Manager URL.
   - `AA_URL`: Automation Agent download URL.
+  - `INSTANCES`: Number of docker instances. Default to 3.
 
 ## Usage
 
@@ -96,7 +96,7 @@ cd ce-docker-mongodb-enterprise/mongo
 
 ```bash
 # This will start 3 containers
-./mongo start 3
+./mongo start
 ```
 
 - Stop MongoDB
