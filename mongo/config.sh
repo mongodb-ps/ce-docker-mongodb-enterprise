@@ -4,5 +4,5 @@ source ../config.sh
 export PROJECT_ID="65dc76bbd6573901883838a2" # mmsGroupId in Ops Manager
 export API_KEY="65dc79ded657390188384157a68b0f8a8088d1901e92b0dff45b9d05" # mmsApiKey in Ops Manager
 export OM_URL="http://host.docker.internal:8080" # mmsBaseUrl in Ops Manager
-export AA_URL="$OM_URL/download/agent/automation/mongodb-mms-automation-agent-manager_107.0.2.8531-1_aarch64.ubuntu2204.deb"
+export AA_URL="$OM_URL/download/agent/automation/mongodb-mms-automation-agent-manager_107.0.2.8531-1_aarch64.ubuntu2204.deb" # Choose the Ubuntu ARM agent
 export INSTANCES=3 # Instances you need.

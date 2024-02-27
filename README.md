@@ -20,7 +20,12 @@ The MongoDB deployment image is built:
 Note the MongoDB relies on Ops Manager to start.
 
 ## How does it work
-Ops Manager doesn't provide pre-compiled version for ARM64 platform thus can't be run on Macbook M1/M2 series. However, Ops Manager is a Java application, which is capable to run on ARM64 platform. The only problem is the JDK included in the package is for x86_64 platform. The script uses the pre-compiled Ops Manager package for Ubuntu, removes `jdk` folder, then link ARM64 openjdk-11 as a replacement. This is enough to resolve the jdk issue.
+### The Ops Manager Container
+Ops Manager doesn't provide pre-compiled package for ARM64 platform thus can't be run on Macbook M1/M2 series. However, Ops Manager is a Java application, which is platform independent. The only problem is the JDK included in the package is for x86_64 platform. The script uses the pre-compiled Ops Manager tarball for Ubuntu, removes `jdk` folder, then symbol link ARM64 openjdk-17 as a replacement. This is enough to resolve the jdk issue.  
+For the Ops Manager to access AppDB, docker compose is used to let the 2 container run in the same network. For now the AppDB is a standalone instance. As well as Ops Manager.
+
+### The MongoDB Container
+Each container will have automation agent installed and started. You can specify how many containers to start by setting the number in the `config.sh`. All instances are started by docker compose so that they are in the same network. For the automation agent to work correctly, you need to properly configure the API key, project ID, and Ops Manager URL. Refer to the next chapter for details.
 
 ## Configuration
 
@@ -28,7 +33,7 @@ All configurations can be found in the following 3 files.
 
 - `config.sh`: common configurations that MongoDB and Ops Manager shares.
   - `DOCKER_USERNAME`: Used as the docker image responsitory name.
-  - `_HTTP_PROXY` / `_HTTPS_PROXY`: Proxy if availalbe.
+  - `_HTTP_PROXY` / `_HTTPS_PROXY`: Proxy if availalbe. (Not fully tested)
 - `ops-manager/config.sh`: Ops Manager config.
   - `MONGODB_VERSION`: MongoDB version used for AppDB.
   - `OM_URL`: Ops Manager download URL.
