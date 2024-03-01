@@ -1,5 +1,5 @@
 # Pull base image.
-FROM ubuntu:jammy
+FROM amazonlinux:2
 
 ARG OM_URL
 ARG API_KEY
