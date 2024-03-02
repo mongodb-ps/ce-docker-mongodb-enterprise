@@ -2,7 +2,7 @@
 
 # Enterprise dependencies
 yum update -y; \
-yum install -y cyrus-sasl cyrus-sasl-gssapi cyrus-sasl-plain krb5-libs libcurl openldap openssl xz-libs; \
+yum install -y cyrus-sasl cyrus-sasl-gssapi cyrus-sasl-plain krb5-libs libcurl openldap openssl xz-libs lm_sensors-libs net-snmp; \
 echo "The following parameters are used to build mongo image: $OM_URL,$PROJECT_ID,$API_KEY"; \
 unset http_proxy; \
 unset https_proxy; \
