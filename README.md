@@ -9,12 +9,12 @@ The Ops Manager is built using:
 
 - Ops Manager: `7.0.2`
 - AppDB: MongoDB `7.0:latest`
-- TODO: Blockstore
 - Base image is `ubuntu:jammy`
+- TODO: Blockstore (For now, use filesystem store instead)
 
 The MongoDB deployment image is built:
 
-- Based on `ubuntu:jammy` image
+- Based on `amazonlinux:2` image (for better compatibility with older versions of MongoDB)
 - Automation Agent is installed
 
 Note the MongoDB relies on Ops Manager to start.
@@ -25,7 +25,7 @@ Ops Manager doesn't provide pre-compiled package for ARM64 platform thus can't b
 For the Ops Manager to access AppDB, docker compose is used to let the 2 container run in the same network. For now the AppDB is a standalone instance. As well as Ops Manager.
 
 ### The MongoDB Container
-Each container will have automation agent installed and started. You can specify how many containers to start by setting the number in the `config.sh`. All instances are started by docker compose so that they are in the same network. For the automation agent to work correctly, you need to properly configure the API key, project ID, and Ops Manager URL. Refer to the next chapter for details.
+Each container will have automation agent installed and started. You can specify how many pods to start by setting the number in the `config.sh` or [pass it as a parameter](#mongodb). All instances are started by docker compose so that they are in the same network. For the automation agent to work correctly, you need to properly configure the API key, project ID, and Ops Manager URL. Refer to the next chapter for details.
 
 ## Configuration
 
@@ -36,7 +36,7 @@ All configurations can be found in the following 3 files.
   - `_HTTP_PROXY` / `_HTTPS_PROXY`: Proxy if availalbe. (Not fully tested)
 - `ops-manager/config.sh`: Ops Manager config.
   - `MONGODB_VERSION`: MongoDB version used for AppDB.
-  - `OM_URL`: Ops Manager download URL.
+  - `OM_URL`: Ops Manager binary download URL.
   - `MONGO_INITDB_ROOT_USERNAME`: Initial admin account name for AppDB.
   - `MONGO_INITDB_ROOT_PASSWORD`: Initial admin password. DO CHANGE THE PASSWORD!
   - `DB_VOLUME`: Host folder for storing AppDB data files.
@@ -47,9 +47,9 @@ All configurations can be found in the following 3 files.
 - `mongo/config.sh`: parameters that's used by MongoDB deployment.
   - `PROJECT_ID`: group/project ID in Ops Manager. This is where in Ops Manager you want to create the MongoDB cluster.
   - `API_KEY`: API KEY used by Ops Manager Automation Agent.
-  - `OM_URL`: Ops Manager URL.
+  - `OM_URL`: Ops Manager URL. Use `http://host.docker.internal:8080` so that your automation agent can always find your OM despite IP changes. 
   - `AA_URL`: Automation Agent download URL.
-  - `INSTANCES`: Number of docker instances. Default to 3.
+  - `INSTANCES`: Number of docker pods. Defaults to 3.
 
 ## Usage
 
@@ -85,8 +85,8 @@ cd ce-docker-mongodb-enterprise/ops-manager
 ```bash
 ./clean.sh
 ```
-Tips: 
-1. Use `http://host.docker.internal:8080` as OM URL, which always maps to docker host, can make things easier in the following steps.
+
+The Ops Manager port by default is mapped to `8080` on the host. Can be changed in the [docker-compose.yaml](https://github.com/mongodb-ps/ce-docker-mongodb-enterprise/blob/main/ops-manager/docker-compose.yml#L24). 
 
 ### MongoDB
 
@@ -100,14 +100,21 @@ cd ce-docker-mongodb-enterprise/mongo
 - Start MongoDB
 
 ```bash
-# This will start 3 containers
+# This will start 3 pods
 ./mongo start
+# Or, this will start 6 pods
+./mongo start 6
 ```
 
 - Stop MongoDB
 
 ```bash
 ./mongo stop
+```
+
+- Clean up the images
+```bash
+./clean.sh
 ```
 
 Tips:
