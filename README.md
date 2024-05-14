@@ -51,6 +51,12 @@ All configurations can be found in the following 3 files.
   - `AA_URL`: Automation Agent download URL.
   - `INSTANCES`: Number of docker pods. Defaults to 3.
 
+## Mount Points & Folders
+Some of the folders are mapped to the host folders. You may need them if you want to setup backup.
+- `/headDB` -> `OM_HEADDB`
+- `/snapshots` -> `OM_SNAPSHOTS`
+- `/mongodb-mms/mongodb-releases` -> `OM_MONGO_RELEASES` (You need to change the default releases folder the first time you start Ops Manager)
+
 ## Usage
 
 - Clone this repository:
@@ -87,6 +93,13 @@ cd ce-docker-mongodb-enterprise/ops-manager
 ```
 
 The Ops Manager port by default is mapped to `8080` on the host. Can be changed in the [docker-compose.yaml](https://github.com/mongodb-ps/ce-docker-mongodb-enterprise/blob/main/ops-manager/docker-compose.yml#L24). 
+
+If you want to setup backup, use the following settings:
+- headDB: `/headDB`
+- snapshots: `/snapshots`
+- Oplog Store: `appdb:27017`. We reuse the AppDB as Oplog Store. No need to change the name `appdb` as it's the name of AppDB pod and is resolvable.
+  - Username: [MONGO_INITDB_ROOT_USERNAME](https://github.com/mongodb-ps/ce-docker-mongodb-enterprise/blob/main/ops-manager/config.sh#L6)
+  - Password: [MONGO_INITDB_ROOT_PASSWORD](https://github.com/mongodb-ps/ce-docker-mongodb-enterprise/blob/main/ops-manager/config.sh#L7)
 
 ### MongoDB
 
