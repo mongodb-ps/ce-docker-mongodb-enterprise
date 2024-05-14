@@ -7,7 +7,7 @@
 This is the script for building MongoDB and Ops Manager docker image.
 The Ops Manager is built using:
 
-- Ops Manager: `7.0.2`
+- Ops Manager: `7.0.6`
 - AppDB: MongoDB `7.0:latest`
 - Base image is `ubuntu:jammy`
 - TODO: Blockstore (For now, use filesystem store instead)
@@ -117,9 +117,6 @@ cd ce-docker-mongodb-enterprise/mongo
 ./clean.sh
 ```
 
-Tips:
-1. After restarting docker service, the IP addresses may change which may confuse OM and cause monitoring issues. Go to More->Host Mappings and clear all mappings can resolve the issue.
-
 ### Known Issues
 
 1. Ops Manager requires at least 4GB to start (recommended 6GB). Adjust RAM limit in `Settings->Resources->Advanced` accordingly if necessary.
@@ -127,3 +124,4 @@ Tips:
 ```bash
 kill `ps aux | grep docker | awk '{print $2}'`
 ```
+1. After restarting docker service, the IP addresses may change which may confuse OM and cause monitoring issues. Go to More->Host Mappings, clear all mappings, wait for a few minutes and the problem should be gone
