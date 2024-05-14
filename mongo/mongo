@@ -2,7 +2,7 @@
 source ./config.sh
 
 start() {
-    docker-compose up --scale mongo=$INSTANCES -d 
+    docker-compose up --scale mongo=$INSTANCES -d
 }
 
 stop() {
@@ -14,6 +14,10 @@ restart() {
   start
 }
 
+if [ ! -z "$2" ]; then
+    INSTANCES=$2
+fi
+echo "Starting $INSTANCES instances."
 case "$1" in
     start|stop|restart)
         $1

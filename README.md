@@ -113,10 +113,11 @@ cd ce-docker-mongodb-enterprise/mongo
 - Start MongoDB
 
 ```bash
-# This will start 3 pods
+# This will start 3 pods.
 ./mongo start
 # Or, this will start 6 pods
 ./mongo start 6
+# Number of instances can also be set via config.sh
 ```
 
 - Stop MongoDB

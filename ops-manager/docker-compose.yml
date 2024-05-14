@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   appdb:
     image: "${DOCKER_USERNAME}/mongo-enterprise:${MONGODB_VERSION}"

@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   mongo:
     image: "${DOCKER_USERNAME}/mongo"
