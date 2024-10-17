@@ -148,4 +148,4 @@ By default it will start [INSTANCES](https://github.com/mongodb-ps/ce-docker-mon
 ```bash
 kill `ps aux | grep docker | awk '{print $2}'`
 ```
-1. After restarting docker service, the IP addresses may change which may confuse OM and cause monitoring issues. Go to More->Host Mappings, clear all mappings, wait for a few minutes and the problem should be gone
+1. After restarting docker service, the IP addresses may change which may confuse OM and cause monitoring issues. Go to More->Host Mappings, clear all mappings, wait for a few minutes and the problem should be gone.
