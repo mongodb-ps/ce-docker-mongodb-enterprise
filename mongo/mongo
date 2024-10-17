@@ -10,7 +10,7 @@ start() {
 
 stop() {
     export IDX=0
-    docker-compose down
+    docker-compose down -t 5
 }
 
 restart() {
