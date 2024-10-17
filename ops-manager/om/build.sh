@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cd om
-
 if [ -z "`docker images -q $DOCKER_USERNAME/ops-manager:$OM_VERSION`" ]; then
     # image doesn't exist, build one.
     echo "Building MongoDB Ops Manager image."
@@ -12,6 +10,7 @@ if [ -z "`docker images -q $DOCKER_USERNAME/ops-manager:$OM_VERSION`" ]; then
         echo "Going to build Ops Manager image: $PKG_NAME"
         echo "Version: $OM_VERSION"
     fi
+    cd om
     if [ -f "$PKG_NAME" ]; then
         echo "$PKG_NAME exists. Skip downloading."
     else
@@ -25,7 +24,7 @@ if [ -z "`docker images -q $DOCKER_USERNAME/ops-manager:$OM_VERSION`" ]; then
         --build-arg https_proxy=$_HTTPS_PROXY \
         --progress=plain \
         ./ -t $DOCKER_USERNAME/ops-manager:$OM_VERSION
+    cd ../
 else
     echo "MongoDB Ops Manager image already exists. Skip building."
 fi
-cd ../
