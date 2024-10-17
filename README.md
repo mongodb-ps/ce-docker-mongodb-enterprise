@@ -21,8 +21,8 @@ Note the MongoDB relies on Ops Manager to start.
 
 ## 2 How does it work
 ### 2.1 The Ops Manager Container
-Ops Manager doesn't provide pre-compiled package for ARM64 platform thus can't be run on Macbook M1/M2 series. However, Ops Manager is a Java application, which is platform independent. The only problem is the JDK included in the package is for x86_64 platform. The script uses the pre-compiled Ops Manager tarball for Ubuntu, removes `jdk` folder, then symbol link ARM64 openjdk-17 as a replacement. This is enough to resolve the jdk issue.  
-For the Ops Manager to access AppDB, docker compose is used to let the 2 container run in the same network. For now the AppDB is a standalone instance. As well as Ops Manager.
+Ops Manager doesn't provide pre-compiled package for ARM64 platform thus can't be run on Macbook M1/M2 series. However, Ops Manager is a Java application, which is platform independent. The only problem is the JDK included in the package is for x86_64 platform. The script uses the pre-compiled Ops Manager tarball for Ubuntu, removes `jdk` folder, then symbol link ARM64 openjdk-21 as a replacement. This is enough to resolve the jdk issue.  
+For the Ops Manager to access AppDB, docker compose is used to let the 2 container run in the same network. For now the AppDB is a standalone instance, as well as Ops Manager.
 
 ### 2.2 The MongoDB Container
 Each container will have automation agent installed and started. You can specify how many containers to start by setting the number in the `config.sh` or [pass it as a parameter](#mongodb). All instances are started by docker compose so that they are in the same network. For the automation agent to work correctly, you need to properly configure the API key, project ID, and Ops Manager URL. Refer to the next section for details.
@@ -122,7 +122,8 @@ cd ce-docker-mongodb-enterprise/mongo
 ```
 
 - Start MongoDB
-By default it will start [INSTANCES](https://github.com/mongodb-ps/ce-docker-mongodb-enterprise/blob/main/mongo/config.sh#L8C1-L9C1) (By default 3) instances. You can override the number by sending it in the command:
+
+By default it will start [INSTANCES](https://github.com/mongodb-ps/ce-docker-mongodb-enterprise/blob/main/mongo/config.sh#L11) (By default 3) instances. You can override the number by sending it in the command:
 ```bash
 # This will start INSTANCES containers.
 ./mongo start
@@ -137,6 +138,7 @@ By default it will start [INSTANCES](https://github.com/mongodb-ps/ce-docker-mon
 ```
 
 - Clean up the images
+
 ```bash
 ./clean.sh
 ```
