@@ -2,10 +2,14 @@
 source ./config.sh
 
 start() {
-    docker-compose up --scale mongo=$INSTANCES -d
+    for IDX in $(seq 1 $INSTANCES); do
+        export IDX
+        docker-compose up --scale mongo=$IDX --no-recreate -d
+    done
 }
 
 stop() {
+    export IDX=0
     docker-compose down
 }
 

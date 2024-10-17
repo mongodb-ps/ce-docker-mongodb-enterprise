@@ -3,11 +3,10 @@ DEBIAN_FRONTEND=noninteractive
 apt-get update; \
 apt-get install -y openssl net-tools fontconfig; \
 apt update; \
-apt install -y openjdk-17-jdk; \
+apt install -y openjdk-21-jdk; \
 # Install Ops Manager
-tar -zxvf $PKG_NAME; \
 rm -rf /mongodb-mms/jdk; \
-ln -s /usr/lib/jvm/java-17-openjdk-arm64 /mongodb-mms/jdk; \
+ln -s /usr/lib/jvm/java-21-openjdk-arm64 /mongodb-mms/jdk; \
 chown mongodb-mms:mongodb-mms -R /mongodb-mms/; \
 rm -rf $PKG_NAME; \
 # Ops Manager config file

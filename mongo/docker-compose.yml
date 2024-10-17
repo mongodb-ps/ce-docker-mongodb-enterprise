@@ -1,6 +1,10 @@
 services:
   mongo:
-    image: "${DOCKER_USERNAME}/mongo"
+    image: "${DOCKER_USERNAME}/mongo:${VERSION}"
+    hostname: mongo_${IDX}
+    volumes:
+      - ${BASE_DBPATH}/mongo_${IDX}/db:/data/db
+      - ${BASE_DBPATH}/mongo_${IDX}/log:/data/log
     ports:
       - "27017"
     restart: always

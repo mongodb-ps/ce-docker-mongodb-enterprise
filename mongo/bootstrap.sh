@@ -7,6 +7,7 @@ echo "The following parameters are used to build mongo image: $OM_URL,$PROJECT_I
 unset http_proxy; \
 unset https_proxy; \
 curl -OL $AA_URL; \
+ls -l
 rpm -ivh *.rpm; \
 sed -i "s%mmsGroupId=.*%mmsGroupId=$PROJECT_ID%" /etc/mongodb-mms/automation-agent.config; \
 sed -i "s%mmsApiKey=.*%mmsApiKey=$API_KEY%" /etc/mongodb-mms/automation-agent.config; \

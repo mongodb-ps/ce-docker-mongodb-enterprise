@@ -4,7 +4,7 @@
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
 
-FROM ubuntu:jammy
+FROM ubuntu:noble
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN set -eux; \
@@ -27,6 +27,7 @@ RUN set -eux; \
 ENV GOSU_VERSION 1.17
 # grab "js-yaml" for parsing mongod's YAML config files (https://github.com/nodeca/js-yaml/releases)
 ENV JSYAML_VERSION 3.13.1
+ENV JSYAML_CHECKSUM 662e32319bdd378e91f67578e56a34954b0a2e33aca11d70ab9f4826af24b941
 
 RUN set -eux; \
 	\
@@ -50,17 +51,18 @@ RUN set -eux; \
 	\
 # download/install js-yaml
 	mkdir -p /opt/js-yaml/; \
-	wget -O /opt/js-yaml/js-yaml.js "https://github.com/nodeca/js-yaml/raw/${JSYAML_VERSION}/dist/js-yaml.js"; \
-	wget -O /opt/js-yaml/package.json "https://github.com/nodeca/js-yaml/raw/${JSYAML_VERSION}/package.json"; \
-	ln -s /opt/js-yaml/js-yaml.js /js-yaml.js; \
-# TODO some sort of download verification here
+	wget -O /opt/js-yaml/js-yaml.tgz https://registry.npmjs.org/js-yaml/-/js-yaml-${JSYAML_VERSION}.tgz; \
+	echo "$JSYAML_CHECKSUM */opt/js-yaml/js-yaml.tgz" | sha256sum -c -; \
+	tar -xz --strip-components=1 -f /opt/js-yaml/js-yaml.tgz -C /opt/js-yaml package/dist/js-yaml.js package/package.json; \
+	rm /opt/js-yaml/js-yaml.tgz; \
+	ln -s /opt/js-yaml/dist/js-yaml.js /js-yaml.js; \
 	\
 # download/install MongoDB PGP keys
 	export GNUPGHOME="$(mktemp -d)"; \
-	wget -O KEYS 'https://pgp.mongodb.com/server-7.0.asc'; \
+	wget -O KEYS 'https://pgp.mongodb.com/server-8.0.asc'; \
 	gpg --batch --import KEYS; \
 	mkdir -p /etc/apt/keyrings; \
-	gpg --batch --export --armor 'E58830201F7DD82CD808AA84160D26BB1785BA38' > /etc/apt/keyrings/mongodb.asc; \
+	gpg --batch --export --armor '4B0752C1BCA238C0B4EE14DC41DE058A4E7DCA05' > /etc/apt/keyrings/mongodb.asc; \
 	gpgconf --kill all; \
 	rm -rf "$GNUPGHOME" KEYS; \
 	\
@@ -83,12 +85,12 @@ ARG MONGO_PACKAGE=mongodb-org
 ARG MONGO_REPO=repo.mongodb.org
 ENV MONGO_PACKAGE=${MONGO_PACKAGE} MONGO_REPO=${MONGO_REPO}
 
-ENV MONGO_MAJOR 7.0
-RUN echo "deb [ signed-by=/etc/apt/keyrings/mongodb.asc ] http://$MONGO_REPO/apt/ubuntu jammy/${MONGO_PACKAGE%-unstable}/$MONGO_MAJOR multiverse" | tee "/etc/apt/sources.list.d/${MONGO_PACKAGE%-unstable}.list"
+ENV MONGO_MAJOR 8.0
+RUN echo "deb [ signed-by=/etc/apt/keyrings/mongodb.asc ] http://$MONGO_REPO/apt/ubuntu noble/${MONGO_PACKAGE%-unstable}/$MONGO_MAJOR multiverse" | tee "/etc/apt/sources.list.d/${MONGO_PACKAGE%-unstable}.list"
 
-# https://docs.mongodb.org/master/release-notes/7.0/
-ENV MONGO_VERSION 7.0.9
-# 04/24/2024, https://github.com/mongodb/mongo/tree/3ff3a3925c36ed277cf5eafca5495f2e3728dd67
+# https://docs.mongodb.org/master/release-notes/8.0/
+ENV MONGO_VERSION 8.0.1
+# 10/03/2024, https://github.com/mongodb/mongo/tree/fcbe67d668fff5a370e2d87b9b1f74bc11bb7b94
 
 RUN set -x \
 # installing "mongodb-enterprise" pulls in "tzdata" which prompts for input

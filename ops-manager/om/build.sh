@@ -23,7 +23,7 @@ if [ -z "`docker images -q $DOCKER_USERNAME/ops-manager:$OM_VERSION`" ]; then
         --build-arg PKG_NAME=$PKG_NAME \
         --build-arg http_proxy=$_HTTP_PROXY \
         --build-arg https_proxy=$_HTTPS_PROXY \
-        # --progress=plain \
+        --progress=plain \
         ./ -t $DOCKER_USERNAME/ops-manager:$OM_VERSION
 else
     echo "MongoDB Ops Manager image already exists. Skip building."

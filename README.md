@@ -7,8 +7,8 @@
 This is the script for building MongoDB and Ops Manager docker image.
 The Ops Manager is built using:
 
-- Ops Manager: `7.0.6`
-- AppDB: MongoDB `7.0:latest`
+- Ops Manager: `8.0.0`
+- AppDB: MongoDB `8.0:latest`
 - Base image is `ubuntu:jammy`
 - TODO: Blockstore (For now, use filesystem store instead)
 
