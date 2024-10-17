@@ -1,6 +1,6 @@
 services:
   mongo:
-    image: "${DOCKER_USERNAME}/mongo:${VERSION}"
+    image: "${DOCKER_USERNAME}/mongo:${OM_VERSION}"
     hostname: mongo_${IDX}
     volumes:
       - ${BASE_DBPATH}/mongo_${IDX}/db:/data/db
