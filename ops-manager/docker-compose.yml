@@ -35,7 +35,7 @@ services:
       resources:
         limits:
           cpus: '2'
-          memory: 8G
+          memory: 10G
 networks:
   opsmanager:
     driver: bridge
