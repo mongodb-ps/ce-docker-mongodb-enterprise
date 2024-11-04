@@ -3,6 +3,7 @@
 ## 1 Summary
 **The images are for testing purpose only. DO NOT use in production!**  
 **The images are tested on Mac ARM series platforms. Other platforms are not tested.**
+**Version 8.0 requires more memory than before. Consider allocating at least 10GB for it.**
 
 This is the script for building MongoDB and Ops Manager docker image.
 The Ops Manager is built using:
