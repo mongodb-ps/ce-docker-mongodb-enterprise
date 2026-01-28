@@ -1,7 +1,6 @@
 # Pull base image.
 FROM ubuntu:jammy
 
-ARG CACHEBUST
 ARG OM_PKG_NAME
 ARG ROOT_USER
 ARG ROOT_PWD

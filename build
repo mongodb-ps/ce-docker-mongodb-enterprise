@@ -39,7 +39,6 @@ if [[ -z "`docker images -q ${NAMESPACE}/ops-manager:${OM_VERSION}`" ]]; then
         --build-arg OM_PKG_NAME=$OM_PKG_NAME \
         --build-arg ROOT_USER=$ROOT_USER \
         --build-arg ROOT_PWD=$ROOT_PWD \
-        --build-arg CACHEBUST=2 \
         --progress=plain \
         ./ -t ${NAMESPACE}/ops-manager:${OM_VERSION}
     if [[ $? -ne 0 ]]; then
