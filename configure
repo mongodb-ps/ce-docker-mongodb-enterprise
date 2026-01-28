@@ -1,0 +1,107 @@
+#!/bin/bash
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+CHECK_MARK=$(printf "\xE2\x9C\x94")
+CROSS_MARK=$(printf "\xE2\x9C\x98")
+
+if [[ -f config ]]; then
+    echo -e "${YELLOW}Configuration file 'config' already exists. To reconfigure, run \"make reconfig\".${NC}"
+    exit 0
+fi
+source config.template
+
+# Check if all required commands are available
+ALL_FOUND=true
+if command -v docker >/dev/null 2>&1; then
+    echo -e "${GREEN}$CHECK_MARK docker found${NC}"
+else
+    echo -e "${RED}$CROSS_MARK docker not found.${NC}"
+    ALL_FOUND=false
+fi
+if command -v jq >/dev/null 2>&1; then
+    echo -e "${GREEN}$CHECK_MARK jq found${NC}"
+else
+    echo -e "${RED}$CROSS_MARK jq not found.${NC}"
+    ALL_FOUND=false
+fi
+if command -v openssl >/dev/null 2>&1; then
+    echo -e "${GREEN}$CHECK_MARK openssl found${NC}"
+else
+    echo -e "${RED}$CROSS_MARK openssl not found.${NC}"
+    ALL_FOUND=false
+fi
+if [ "$ALL_FOUND" = false ]; then
+    echo -e "${RED}Please install the missing commands and try again.${NC}"
+    exit 1
+fi
+
+echo "Checking available MongoDB versions..."
+# Fetch available MongoDB versions from Docker Hub
+AVAILABLE_MONGO_VERSIONS=$(curl -sS "https://hub.docker.com/v2/repositories/mongodb/mongodb-enterprise-server/tags/?page_size=100" \
+| jq -r '.results[] | select(
+    (.name | test("^[0-9]+\\.[0-9]+\\.[0-9]+-ubuntu\\d+$")) and
+    (.tag_status == "active")
+  ) | .name' \
+| sort -rV)
+echo "Latest MongoDB Versions:"
+echo -e "${GREEN}$AVAILABLE_MONGO_VERSIONS${NC}"
+LATEST_MONGO_VERSION=$(echo "$AVAILABLE_MONGO_VERSIONS" | head -n 1)
+
+read -p "Choose AppDB MongoDB version ($LATEST_MONGO_VERSION): " APPDB_VERSION
+if [[ -z $APPDB_VERSION ]]; then
+    APPDB_VERSION="$LATEST_MONGO_VERSION"
+fi
+
+read -p "Choose volumes host mapping path ($DEFAULT_HOST_PATH): " HOST_PATH
+if [[ -z $HOST_PATH ]]; then
+    HOST_PATH=$DEFAULT_HOST_PATH
+else
+    HOST_PATH=${HOST_PATH%/}
+fi
+ROOT_PWD=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 16)
+
+# Check available Ops Manager versions
+echo "Checking available Ops Manager versions..."
+DOWNLOAD_LINKS=$(curl -sS https://www.mongodb.com/try/download/ops-manager/releases/archive | grep -oE "https://downloads.mongodb.com/on-prem-mms/tar/mongodb-mms-\d[-a-zA-Z0-9._]+" | sort -Vr | uniq)
+LATEST_OM_VERSIONS=$(echo "$DOWNLOAD_LINKS" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+" | awk -F. '{count[$1]++; if(count[$1] <= 1) print $0}' | head -n 3)
+echo "Latest Ops Manager Versions:"
+echo -e "${GREEN}$LATEST_OM_VERSIONS${NC}"
+# Extract latest version number
+LATEST_OM_VERSION=$(echo "$LATEST_OM_VERSIONS" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+" | head -n 1)
+read -p "Choose Ops Manager version ($LATEST_OM_VERSION): " OM_VERSION
+if [[ -z $OM_VERSION ]]; then
+    OM_VERSION="$LATEST_OM_VERSION"
+fi
+OM_DOWNLOAD_LINK=$(echo "$DOWNLOAD_LINKS" | grep "mongodb-mms-$OM_VERSION" | head -n 1)
+OM_PKG_NAME=$(basename "$OM_DOWNLOAD_LINK")
+
+# Ops Manager port
+read -p "Choose Ops Manager Port ($DEFAULT_OM_MAPPING_PORT): " OM_MAPPING_PORT
+if [[ -z $OM_MAPPING_PORT ]]; then
+    OM_MAPPING_PORT="$DEFAULT_OM_MAPPING_PORT"
+fi
+
+echo "#!/bin/bash" > config
+echo "export NAMESPACE=$DEFAULT_NAMESPACE" >> config
+echo "export HOST_PATH=$HOST_PATH" >> config
+echo "export APPDB_VERSION=$APPDB_VERSION" >> config
+echo "export APPDB_DBPATH=$HOST_PATH$DEFAULT_APPDB_DBPATH" >> config
+echo "export APPDB_MAPPING_PORT=$DEFAULT_APPDB_MAPPING_PORT" >> config
+echo "export ROOT_USER=$DEFAULT_ROOT_USER" >> config
+echo "export ROOT_PWD=$ROOT_PWD" >> config
+echo "export OM_VERSION=$OM_VERSION" >> config
+echo "export OM_DOWNLOAD_LINK=$OM_DOWNLOAD_LINK" >> config
+echo "export OM_PKG_NAME=$OM_PKG_NAME" >> config
+echo "export OM_MAPPING_PORT=$OM_MAPPING_PORT" >> config
+echo "export RELEASES=$HOST_PATH$DEFAULT_RELEASES" >> config
+echo "export OM_LOGS=$HOST_PATH$DEFAULT_OM_LOGS" >> config
+echo "export OM_SNAPSHOTS=$HOST_PATH$DEFAULT_OM_SNAPSHOTS" >> config
+echo "export OM_HEAD_DB=$HOST_PATH$DEFAULT_OM_HEAD_DB" >> config
+echo "export BACKUPD_LOGS=$HOST_PATH$DEFAULT_BACKUPD_LOGS" >> config
+chmod +x config
+
+echo -e "Configuration saved to file ${GREEN}config${NC}."
+echo -e "Your AppDB username / password: ${GREEN}$DEFAULT_ROOT_USER / $ROOT_PWD${NC}"

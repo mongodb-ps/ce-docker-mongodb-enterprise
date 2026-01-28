@@ -1,23 +1,24 @@
 # Pull base image.
 FROM ubuntu:jammy
 
-ARG PKG_NAME
-ARG MONGO_INITDB_ROOT_USERNAME
-ARG MONGO_INITDB_ROOT_PASSWORD
-ADD bootstrap.sh /
-ADD startup.sh /
-ADD $PKG_NAME /
-RUN set -eux; \
-	groupadd --gid 999 --system mongodb-mms; \
-	useradd --uid 999 --system --gid mongodb-mms --home-dir /mongodb-mms mongodb-mms;
-	
-RUN chmod +x ./bootstrap.sh && ./bootstrap.sh
+ARG CACHEBUST
+ARG OM_PKG_NAME
+ARG ROOT_USER
+ARG ROOT_PWD
+
+COPY setup.sh /tmp/
+COPY entrypoint.sh /usr/local/bin/
+COPY gen.key /
+
+ADD ./$OM_PKG_NAME /
+RUN chmod +x /tmp/setup.sh && \
+	/tmp/setup.sh ${ROOT_USER} ${ROOT_PWD} && \
+	rm /tmp/setup.sh
 
 # Define mountable directories.
 VOLUME ["/mongodb-mms/logs", "/mongodb-mms/mongodb-releases", "/headDB", "/snapshots"]
 
-# Define default command.
-CMD "/startup.sh"
+ENTRYPOINT [ "entrypoint.sh" ]
 
 # Expose ports.
 EXPOSE 8080

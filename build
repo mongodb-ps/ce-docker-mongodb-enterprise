@@ -1,0 +1,52 @@
+#!/bin/bash
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+CHECK_MARK=$(printf "\xE2\x9C\x94")
+CROSS_MARK=$(printf "\xE2\x9C\x98")
+if [[ -f config ]]; then
+    source config
+else
+    echo -e "${RED}Configuration file 'config' not found. Please run './configure' first.${NC}"
+    exit 1
+fi
+
+echo -e "Setting up directories. Base folder: ${GREEN}$HOST_PATH${NC}"
+mkdir -p $HOST_PATH $APPDB_DBPATH $RELEASES $OM_LOGS $OM_SNAPSHOTS $OM_HEAD_DB $BACKUPD_LOGS
+
+echo -e "Pulling MongoDB image for AppDB: ${GREEN}mongodb/mongodb-enterprise-server:$APPDB_VERSION${NC}"
+docker pull mongodb/mongodb-enterprise-server:$APPDB_VERSION
+
+echo -e "Generate gen.key for Ops Manager encryption..."
+cd ops-manager/om
+if [[ ! -f "gen.key" ]]; then
+    openssl rand 24 > gen.key
+fi
+if [[ -z "`docker images -q ${NAMESPACE}/ops-manager:${OM_VERSION}`" ]]; then
+    # image doesn't exist, build one.
+    cd om
+    if [[ -f "$OM_PKG_NAME" ]]; then
+        echo -e "$OM_PKG_NAME exists. Skip downloading."
+    else
+        echo -e "Downloading Ops Manager: ${GREEN}$OM_DOWNLOAD_LINK${NC}"
+        curl -OL $OM_DOWNLOAD_LINK
+    fi
+    echo -e "Building MongoDB Ops Manager image using tarball: ${GREEN}$OM_PKG_NAME${NC}"
+    docker build \
+        --build-arg OM_PKG_NAME=$OM_PKG_NAME \
+        --build-arg ROOT_USER=$ROOT_USER \
+        --build-arg ROOT_PWD=$ROOT_PWD \
+        --build-arg CACHEBUST=2 \
+        --progress=plain \
+        ./ -t ${NAMESPACE}/ops-manager:${OM_VERSION}
+    if [[ $? -ne 0 ]]; then
+        echo -e "${RED}Failed to build MongoDB Ops Manager image.${NC}"
+        exit 1
+    fi
+    echo -e "${GREEN}MongoDB Ops Manager image built successfully.${NC}"
+else
+    echo -e "${GREEN}MongoDB Ops Manager image already exists. Skip building.${NC}"
+fi

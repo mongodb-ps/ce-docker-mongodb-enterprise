@@ -1,0 +1,24 @@
+#!/bin/bash
+# Default docker namespace to use
+export DEFAULT_NAMESPACE="docker-mongodb"
+export DEFAULT_HOST_PATH="$HOME/.docker-mongodb"
+
+# Map AppDB MongoDB to this port on host
+export DEFAULT_APPDB_MAPPING_PORT=29017
+# Store AppDB data files here on host
+export DEFAULT_APPDB_DBPATH="/appdb"
+# Default root user for AppDB
+export DEFAULT_ROOT_USER="root"
+
+# Map Ops Manager to this port on host
+export DEFAULT_OM_MAPPING_PORT=8080
+# Map Ops Manager releases storage path
+export DEFAULT_RELEASES="/mongodb-releases"
+# Map Ops Manager logs storage path
+export DEFAULT_OM_LOGS="/ops-manager-logs"
+# Map Ops Manager backups snapshots storage path
+export DEFAULT_OM_SNAPSHOTS="/ops-manager-snapshots"
+# Map Ops Manager head DB storage path
+export DEFAULT_OM_HEAD_DB="/ops-manager-head-db"
+# Map Backup Daemon logs storage path
+export DEFAULT_BACKUPD_LOGS="/backup-daemon-logs"
