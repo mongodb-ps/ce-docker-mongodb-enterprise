@@ -1,2 +1,6 @@
 *.deb
 *.tar.gz
+.DS_Store
+config
+mongodb-mms*
+gen.key
