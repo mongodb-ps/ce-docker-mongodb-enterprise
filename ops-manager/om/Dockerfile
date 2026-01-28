@@ -15,7 +15,7 @@ RUN chmod +x /tmp/setup.sh && \
 	rm /tmp/setup.sh
 
 # Define mountable directories.
-VOLUME ["/mongodb-mms/logs", "/mongodb-mms/mongodb-releases", "/headDB", "/snapshots"]
+VOLUME ["/mongodb-mms/logs", "/mongodb-mms/mongodb-releases"]
 
 ENTRYPOINT [ "entrypoint.sh" ]
 
