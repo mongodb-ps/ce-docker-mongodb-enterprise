@@ -56,6 +56,12 @@ else
     echo -e "${RED}$CROSS_MARK openssl not found.${NC}"
     ALL_FOUND=false
 fi
+if command -v python3 >/dev/null 2>&1; then
+    echo -e "${GREEN}$CHECK_MARK python3 found${NC}"
+else
+    echo -e "${RED}$CROSS_MARK python3 not found.${NC}"
+    ALL_FOUND=false
+fi
 if [ "$ALL_FOUND" = false ]; then
     echo -e "${RED}Please install the missing commands and try again.${NC}"
     exit 1
