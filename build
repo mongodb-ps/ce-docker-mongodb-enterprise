@@ -10,7 +10,7 @@ CROSS_MARK=$(printf "\xE2\x9C\x98")
 if [[ -f config ]]; then
     source config
 else
-    echo -e "${RED}Configuration file 'config' not found. Please run './configure' first.${NC}"
+    echo -e "${RED}Configuration file 'config' not found. Please run 'make config' first.${NC}"
     exit 1
 fi
 
