@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 DEBIAN_FRONTEND=noninteractive 
 
 # Add user/group for Ops Manager
