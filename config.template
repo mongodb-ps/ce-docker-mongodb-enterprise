@@ -22,3 +22,8 @@ export DEFAULT_OM_SNAPSHOTS="/ops-manager-snapshots"
 export DEFAULT_OM_HEAD_DB="/ops-manager-head-db"
 # Map Backup Daemon logs storage path
 export DEFAULT_BACKUPD_LOGS="/backup-daemon-logs"
+
+# Admin info for Ops Manager
+export DEFAULT_OM_ADMIN_EMAIL="admin@mongodb.com"
+export DEFAULT_OM_ADMIN_FIRSTNAME="Admin"
+export DEFAULT_OM_ADMIN_LASTNAME="User"

@@ -84,6 +84,27 @@ if [[ -z $OM_MAPPING_PORT ]]; then
     OM_MAPPING_PORT="$DEFAULT_OM_MAPPING_PORT"
 fi
 
+# Gather first Ops Manager user information
+read -p "Enter email or username for the Ops Manager admin ($DEFAULT_OM_ADMIN_EMAIL): " OM_ADMIN_EMAIL
+if [[ -z $OM_ADMIN_EMAIL ]]; then
+    OM_ADMIN_EMAIL=$DEFAULT_OM_ADMIN_EMAIL
+fi
+
+read -p "Enter password for the Ops Manager admin (will be generated if left blank): " OM_ADMIN_PWD
+if [[ -z $OM_ADMIN_PWD ]]; then
+    OM_ADMIN_PWD=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 16)
+fi
+
+read -p "Enter first name for the Ops Manager admin ($DEFAULT_OM_ADMIN_FIRSTNAME): " OM_ADMIN_FIRSTNAME
+if [[ -z $OM_ADMIN_FIRSTNAME ]]; then
+    OM_ADMIN_FIRSTNAME=$DEFAULT_OM_ADMIN_FIRSTNAME
+fi
+
+read -p "Enter last name for the Ops Manager admin ($DEFAULT_OM_ADMIN_LASTNAME): " OM_ADMIN_LASTNAME
+if [[ -z $OM_ADMIN_LASTNAME ]]; then
+    OM_ADMIN_LASTNAME=$DEFAULT_OM_ADMIN_LASTNAME
+fi
+
 echo "#!/bin/bash" > config
 echo "export NAMESPACE=$DEFAULT_NAMESPACE" >> config
 echo "export HOST_PATH=$HOST_PATH" >> config
@@ -101,7 +122,12 @@ echo "export OM_LOGS=$HOST_PATH$DEFAULT_OM_LOGS" >> config
 echo "export OM_SNAPSHOTS=$HOST_PATH$DEFAULT_OM_SNAPSHOTS" >> config
 echo "export OM_HEAD_DB=$HOST_PATH$DEFAULT_OM_HEAD_DB" >> config
 echo "export BACKUPD_LOGS=$HOST_PATH$DEFAULT_BACKUPD_LOGS" >> config
+echo "export OM_ADMIN_EMAIL=$OM_ADMIN_EMAIL" >> config
+echo "export OM_ADMIN_PWD=$OM_ADMIN_PWD" >> config
+echo "export OM_ADMIN_FIRSTNAME=$OM_ADMIN_FIRSTNAME" >> config
+echo "export OM_ADMIN_LASTNAME=$OM_ADMIN_LASTNAME" >> config
 chmod +x config
 
 echo -e "Configuration saved to file ${GREEN}config${NC}."
 echo -e "Your AppDB username / password: ${GREEN}$DEFAULT_ROOT_USER / $ROOT_PWD${NC}"
+echo -e "Your Ops Manager admin username / password: ${GREEN}$OM_ADMIN_EMAIL / $OM_ADMIN_PWD${NC}"
