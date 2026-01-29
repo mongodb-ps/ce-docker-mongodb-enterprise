@@ -7,6 +7,41 @@ NC='\033[0m' # No Color
 CHECK_MARK=$(printf "\xE2\x9C\x94")
 CROSS_MARK=$(printf "\xE2\x9C\x98")
 
+generate_password() {
+    local length=${1:-16}
+    local password=""
+    local upper="A-Z"
+    local lower="a-z"
+    local digits="0-9"
+    local specials='!@#$%^&*()_+'
+
+    while true; do
+        for (( i=0; i<$length; i++ )); do
+            local rand_type=$(( RANDOM % 4 ))
+            
+            local pool=""
+            case $rand_type in
+                0) pool=$upper ;;
+                1) pool=$lower ;;
+                2) pool=$digits ;;
+                3) pool=$specials ;;
+            esac
+            local char=$(LC_ALL=C tr -dc "$pool" < /dev/urandom | head -c 1)
+            
+            password="${password}${char}"
+        done
+        if [[ "$password" =~ [A-Z] ]] && \
+           [[ "$password" =~ [a-z] ]] && \
+           [[ "$password" =~ [0-9] ]] && \
+           [[ "$password" =~ '[!@#$%^&*()_+]' ]]; then
+            echo "$password"
+            return 0
+        fi
+    done
+
+    echo "$password"
+}
+
 if [[ -f config ]]; then
     echo -e "${YELLOW}Configuration file 'config' already exists. To reconfigure, run \"make reconfig\".${NC}"
     exit 0
@@ -92,7 +127,7 @@ fi
 
 read -p "Enter password for the Ops Manager admin (will be generated if left blank): " OM_ADMIN_PWD
 if [[ -z $OM_ADMIN_PWD ]]; then
-    OM_ADMIN_PWD=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 16)
+    OM_ADMIN_PWD=$(generate_password 16)
 fi
 
 read -p "Enter first name for the Ops Manager admin ($DEFAULT_OM_ADMIN_FIRSTNAME): " OM_ADMIN_FIRSTNAME
@@ -123,7 +158,7 @@ echo "export OM_SNAPSHOTS=$HOST_PATH$DEFAULT_OM_SNAPSHOTS" >> config
 echo "export OM_HEAD_DB=$HOST_PATH$DEFAULT_OM_HEAD_DB" >> config
 echo "export BACKUPD_LOGS=$HOST_PATH$DEFAULT_BACKUPD_LOGS" >> config
 echo "export OM_ADMIN_EMAIL=$OM_ADMIN_EMAIL" >> config
-echo "export OM_ADMIN_PWD=$OM_ADMIN_PWD" >> config
+echo "export OM_ADMIN_PWD='$OM_ADMIN_PWD'" >> config
 echo "export OM_ADMIN_FIRSTNAME=$OM_ADMIN_FIRSTNAME" >> config
 echo "export OM_ADMIN_LASTNAME=$OM_ADMIN_LASTNAME" >> config
 chmod +x config
