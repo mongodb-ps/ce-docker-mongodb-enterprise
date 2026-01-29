@@ -8,14 +8,17 @@ reconfig:
 	rm -f config
 	./configure
 build:
+	cd ops-manager; \
 	./build
 clean:
 	source config; \
 	echo "Removing Docker images..."; \
 	docker rmi -f $${NAMESPACE}/ops-manager:$${OM_VERSION} || true; \
-	docker rmi -f $${NAMESPACE}/backup-daemon:$${OM_VERSION} || true;
+	docker rmi -f $${NAMESPACE}/backup-daemon:$${OM_VERSION} || true; \
 rebuild: clean build
 destroy: stop-om clean
+	echo "Cleaning docker system..."; \
+	docker system prune; \
 	echo "Removing host data directory..."; \
 	rm -rf $${HOST_PATH} config ops-manager/om/gen.key
 run-om:

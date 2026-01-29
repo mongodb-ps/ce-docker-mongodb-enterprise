@@ -7,8 +7,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 CHECK_MARK=$(printf "\xE2\x9C\x94")
 CROSS_MARK=$(printf "\xE2\x9C\x98")
-if [[ -f config ]]; then
-    source config
+if [[ -f ../config ]]; then
+    source ../config
 else
     echo -e "${RED}Configuration file 'config' not found. Please run 'make config' first.${NC}"
     exit 1
@@ -17,14 +17,17 @@ fi
 echo -e "Setting up directories. Base folder: ${GREEN}$HOST_PATH${NC}"
 mkdir -p $HOST_PATH $APPDB_DBPATH $RELEASES $OM_LOGS $OM_SNAPSHOTS $OM_HEAD_DB $BACKUPD_LOGS
 
+# Pull MongoDB image for AppDB
 echo -e "Pulling MongoDB image for AppDB: ${GREEN}mongodb/mongodb-enterprise-server:$APPDB_VERSION${NC}"
 docker pull mongodb/mongodb-enterprise-server:$APPDB_VERSION
 
+# Generate gen.key and build Ops Manager and Backup Daemon images
 echo -e "Generate gen.key for Ops Manager encryption..."
-cd ops-manager/om
+cd om
 if [[ ! -f "gen.key" ]]; then
     openssl rand 24 > gen.key
 fi
+# Build Ops Manager image
 if [[ -z "`docker images -q ${NAMESPACE}/ops-manager:${OM_VERSION}`" ]]; then
     # image doesn't exist, build one.
     if [[ -f "$OM_PKG_NAME" ]]; then
@@ -38,31 +41,30 @@ if [[ -z "`docker images -q ${NAMESPACE}/ops-manager:${OM_VERSION}`" ]]; then
         --build-arg OM_PKG_NAME=$OM_PKG_NAME \
         --build-arg ROOT_USER=$ROOT_USER \
         --build-arg ROOT_PWD=$ROOT_PWD \
-        --progress=plain \
         ./ -t ${NAMESPACE}/ops-manager:${OM_VERSION}
     if [[ $? -ne 0 ]]; then
         echo -e "${RED}Failed to build MongoDB Ops Manager image.${NC}"
         exit 1
     fi
-    echo -e "${GREEN}MongoDB Ops Manager image built successfully.${NC}"
+    echo -e "${CHECK_MARK}${GREEN}MongoDB Ops Manager image built successfully.${NC}"
     cd ..
 else
     echo -e "${GREEN}MongoDB Ops Manager image already exists. Skip building.${NC}"
 fi
 
+# Build Backup Daemon image
 if [[ -z "`docker images -q ${NAMESPACE}/backup-daemon:${OM_VERSION}`" ]]; then
     cd backup-daemon
     echo -e "Building MongoDB Backup Daemon image based on Ops Manager image: ${GREEN}${NAMESPACE}/ops-manager:${OM_VERSION}${NC}"
     docker build \
         --build-arg BASE_IMG=${NAMESPACE}/ops-manager:${OM_VERSION} \
-        --progress=plain \
         ./ -t ${NAMESPACE}/backup-daemon:${OM_VERSION}
     if [[ $? -ne 0 ]]; then
         echo -e "${RED}Failed to build MongoDB Backup Daemon image.${NC}"
         exit 1
     fi
-    echo -e "${GREEN}MongoDB Backup Daemon image built successfully.${NC}"
-    cd ..
+    echo -e "${CHECK_MARK}${GREEN}MongoDB Backup Daemon image built successfully.${NC}"
+    cd ../
 else
     echo -e "${GREEN}MongoDB Backup Daemon image already exists. Skip building.${NC}"
 fi
