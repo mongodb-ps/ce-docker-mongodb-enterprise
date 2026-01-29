@@ -1,7 +1,6 @@
 #!/bin/bash
 DEBIAN_FRONTEND=noninteractive 
-ROOT_USER=$1
-ROOT_PWD=$2
+
 # Add user/group for Ops Manager
 groupadd --gid 999 --system mongodb-mms;
 useradd --uid 999 --system --gid mongodb-mms --home-dir /mongodb-mms mongodb-mms;

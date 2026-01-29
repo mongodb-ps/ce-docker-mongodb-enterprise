@@ -11,7 +11,7 @@ COPY gen.key /
 
 ADD ./$OM_PKG_NAME /
 RUN chmod +x /tmp/setup.sh && \
-	/tmp/setup.sh ${ROOT_USER} ${ROOT_PWD} && \
+	/tmp/setup.sh && \
 	rm /tmp/setup.sh
 
 # Define mountable directories.
