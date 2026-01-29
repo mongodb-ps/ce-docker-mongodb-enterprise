@@ -52,7 +52,7 @@ services:
       resources:
         limits:
           cpus: '2'
-          memory: 10G
+          memory: 4G
 networks:
   opsmanager:
     driver: bridge
