@@ -25,7 +25,7 @@ run-om:
 	source config; \
 	cd ops-manager/om; \
 	docker-compose up -d; \
-	printf "Waiting for Ops Manager to start."; \
+	printf "Waiting for Ops Manager to start"; \
 	until [ "$$(curl -s -L -o /dev/null -w "%{http_code}" --max-time 2 http://localhost:$${OM_MAPPING_PORT}/)" -eq 200 ]; do \
 		printf "."; \
 		sleep 5; \
@@ -36,7 +36,7 @@ run-om:
 	--header "Accept: application/json" \
 	--header "Content-Type: application/json" \
 	--silent \
-	--request POST "http://localhost:$${OM_MAPPING_PORT}/api/public/v1.0/unauth/users?pretty=true" \
+	--request POST "http://localhost:$${OM_MAPPING_PORT}/api/public/v1.0/unauth/users?whitelist=0.0.0.0" \
 	--data "{\"username\": \"$${OM_ADMIN_EMAIL}\", \"password\": \"$${OM_ADMIN_PWD}\", \"firstName\": \"$${OM_ADMIN_FIRSTNAME}\", \"lastName\": \"$${OM_ADMIN_LASTNAME}\"}"); \
 	PUBLIC_KEY=$$(echo "$$RESPONSE" | jq -r '.programmaticApiKey.publicKey'); \
 	PRIVATE_KEY=$$(echo "$$RESPONSE" | jq -r '.programmaticApiKey.privateKey'); \
