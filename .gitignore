@@ -4,4 +4,5 @@
 config
 mongodb-mms*
 gen.key
-*.pyc
+*.pyc'
+__pycache__/
