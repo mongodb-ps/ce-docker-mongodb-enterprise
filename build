@@ -27,7 +27,6 @@ if [[ ! -f "gen.key" ]]; then
 fi
 if [[ -z "`docker images -q ${NAMESPACE}/ops-manager:${OM_VERSION}`" ]]; then
     # image doesn't exist, build one.
-    cd om
     if [[ -f "$OM_PKG_NAME" ]]; then
         echo -e "$OM_PKG_NAME exists. Skip downloading."
     else
@@ -46,6 +45,24 @@ if [[ -z "`docker images -q ${NAMESPACE}/ops-manager:${OM_VERSION}`" ]]; then
         exit 1
     fi
     echo -e "${GREEN}MongoDB Ops Manager image built successfully.${NC}"
+    cd ..
 else
     echo -e "${GREEN}MongoDB Ops Manager image already exists. Skip building.${NC}"
+fi
+
+if [[ -z "`docker images -q ${NAMESPACE}/backup-daemon:${OM_VERSION}`" ]]; then
+    cd backup-daemon
+    echo -e "Building MongoDB Backup Daemon image based on Ops Manager image: ${GREEN}${NAMESPACE}/ops-manager:${OM_VERSION}${NC}"
+    docker build \
+        --build-arg BASE_IMG=${NAMESPACE}/ops-manager:${OM_VERSION} \
+        --progress=plain \
+        ./ -t ${NAMESPACE}/backup-daemon:${OM_VERSION}
+    if [[ $? -ne 0 ]]; then
+        echo -e "${RED}Failed to build MongoDB Backup Daemon image.${NC}"
+        exit 1
+    fi
+    echo -e "${GREEN}MongoDB Backup Daemon image built successfully.${NC}"
+    cd ..
+else
+    echo -e "${GREEN}MongoDB Backup Daemon image already exists. Skip building.${NC}"
 fi
