@@ -10,11 +10,16 @@ reconfig:
 build:
 	cd ops-manager; \
 	./build
-clean:
+clean-om:
 	source config; \
-	echo "Removing Docker images..."; \
+	echo "Removing Ops Manager Docker images..."; \
 	docker rmi -f $${NAMESPACE}/ops-manager:$${OM_VERSION} || true; \
-	docker rmi -f $${NAMESPACE}/backup-daemon:$${OM_VERSION} || true; \
+	docker rmi -f $${NAMESPACE}/backup-daemon:$${OM_VERSION} || true;
+clean-mongo:
+	source config; \
+	echo "Removing MongoDB Automation Agent Docker image..."; \
+	docker rmi -f $${NAMESPACE}/mongodb:$${OM_VERSION} || true;
+clean: clean-om clean-mongo
 rebuild: clean build
 destroy: stop-om clean
 	echo "Cleaning docker system..."; \
