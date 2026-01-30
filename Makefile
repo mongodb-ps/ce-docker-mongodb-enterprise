@@ -67,11 +67,6 @@ run-om:
 	source config; \
 	cd ops-manager/om; \
 	docker-compose up -d; \
-	printf "Waiting for Ops Manager to start"; \
-	until [ "$$(curl -s -L -o /dev/null -w "%{http_code}" --max-time 2 http://localhost:$${OM_MAPPING_PORT}/)" -eq 200 ]; do \
-		printf "."; \
-		sleep 5; \
-	done; \
 	echo "Ops Manager started. Initializing..."; \
 	cd ../../; \
 	if [[ "$$PUBLIC_KEY" == "" && "$$PRIVATE_KEY" == "" ]]; then \
@@ -100,7 +95,10 @@ run-om:
 		echo "export AGENT_API_KEY=$$AGENT_API_KEY" >> config; \
 		echo "export AGENT_VERSION=$$AGENT_VERSION" >> config; \
 		echo "Project prepared with ID $$PROJECT_ID and Agent API Key."; \
-	fi;
+	fi; \
+	echo "Enabling backup daemon..."; \
+	python3 scripts/enable_daemon.py; \
+	cd ../;
 run-mongo:
 	source config; \
 	cd mongo; \

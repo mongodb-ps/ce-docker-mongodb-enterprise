@@ -21,6 +21,8 @@ services:
     image: "${NAMESPACE}/ops-manager:${OM_VERSION}"
     hostname: "ops-manager"
     restart: always
+    depends_on:
+      - appdb
     ports:
       - "${OM_MAPPING_PORT}:8080"
     environment:
@@ -31,6 +33,12 @@ services:
       - ${OM_LOGS}:/mongodb-mms/logs
     networks:
       - opsmanager
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
     deploy:
       resources:
         limits:
@@ -40,6 +48,9 @@ services:
     image: "${NAMESPACE}/backup-daemon:${OM_VERSION}"
     hostname: "backup-daemon"
     restart: always
+    depends_on:
+      opsmanager:
+        condition: service_healthy
     ports:
       - "27700-27719:27700-27719"
       - "25999:25999"

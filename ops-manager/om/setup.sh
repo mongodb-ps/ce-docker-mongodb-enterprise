@@ -8,7 +8,7 @@ useradd --uid 999 --system --gid mongodb-mms --home-dir /mongodb-mms mongodb-mms
 
 # Install dependencies
 apt update;
-apt install -y openssl net-tools fontconfig;
+apt install -y openssl net-tools fontconfig curl;
 
 # ADD instruction will automatically extract the tarball into /mongodb-mms
 # Adding this line to verify the content
