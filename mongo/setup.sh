@@ -8,19 +8,23 @@ yum install -y cyrus-sasl cyrus-sasl-gssapi cyrus-sasl-plain krb5-libs libcurl o
 # Download automation agent
 cd /tmp
 if [[ "$IS_ARM" == "true" ]]; then
-    AGENT_URL="$OM_URL/download/agent/automation/mongodb-mms-automation-agent-$AGENT_VERSION-1.rhel7_x86_64.tar.gz"
+    AGENT_PKG_NAME="mongodb-mms-automation-agent-$AGENT_VERSION-1.amzn2_aarch64"
+    AGENT_URL="$OM_URL/download/agent/automation/$AGENT_PKG_NAME.tar.gz"
 else
-    AGENT_URL="$OM_URL/download/agent/automation/mongodb-mms-automation-agent-$AGENT_VERSION-1.amzn2_aarch64.tar.gz"
+    AGENT_PKG_NAME="mongodb-mms-automation-agent-$AGENT_VERSION-1.rhel7_x86_64"
+    AGENT_URL="$OM_URL/download/agent/automation/$AGENT_PKG_NAME.tar.gz"
 fi
 curl -OL $AGENT_URL
-tar -zxvf mongodb-mms-automation-agent-$AGENT_VERSION-1.rhel7_x86_64.tar.gz -C /opt/
-mv /opt/mongodb-mms-automation-agent-$AGENT_VERSION-1.rhel7_x86_64 /opt/mongodb-mms-automation
+tar -zxvf $AGENT_PKG_NAME.tar.gz -C /opt/
+mv /opt/$AGENT_PKG_NAME /opt/mongodb-mms-automation
 groupadd -g 900 -r mongod
 useradd -u 900 -r -g mongod -s /sbin/nologin -M mongod
 
 # Create data folder
 mkdir -p /data/{db,log}
 chown mongod:mongod -R /data
+mkdir -p /var/lib/mongodb-mms-automation
+chown mongod:mongod -R /var/lib/mongodb-mms-automation
 
 # Clean up
 yum clean all
