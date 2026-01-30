@@ -4,6 +4,7 @@ FROM ubuntu:jammy
 ARG OM_PKG_NAME
 ARG ROOT_USER
 ARG ROOT_PWD
+ARG OM_MAPPING_PORT
 
 COPY setup.sh /tmp/
 COPY entrypoint.sh /usr/local/bin/

@@ -41,6 +41,7 @@ if [[ -z "`docker images -q ${NAMESPACE}/ops-manager:${OM_VERSION}`" ]]; then
         --build-arg OM_PKG_NAME=$OM_PKG_NAME \
         --build-arg ROOT_USER=$ROOT_USER \
         --build-arg ROOT_PWD=$ROOT_PWD \
+        --build-arg OM_MAPPING_PORT=$OM_MAPPING_PORT \
         ./ -t ${NAMESPACE}/ops-manager:${OM_VERSION}
     if [[ $? -ne 0 ]]; then
         echo -e "${RED}${CROSS_MARK} Failed to build MongoDB Ops Manager image.${NC}"
