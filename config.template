@@ -30,3 +30,5 @@ export DEFAULT_OM_ADMIN_LASTNAME="User"
 
 # MongoDB
 export DEFAULT_MONGO_MAPPING_PORT=37017
+export DEFAULT_MONGO_DBPATH="/mongo-data"
+export DEFAULT_MONGO_LOGPATH="/mongo-logs"

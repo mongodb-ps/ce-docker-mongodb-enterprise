@@ -156,6 +156,8 @@ echo "export OM_ADMIN_PWD='$OM_ADMIN_PWD'" >> config
 echo "export OM_ADMIN_FIRSTNAME=$OM_ADMIN_FIRSTNAME" >> config
 echo "export OM_ADMIN_LASTNAME=$OM_ADMIN_LASTNAME" >> config
 echo "export MONGO_MAPPING_PORT=$DEFAULT_MONGO_MAPPING_PORT" >> config
+echo "export MONGO_DBPATH=$HOST_PATH$DEFAULT_MONGO_DBPATH" >> config
+echo "export MONGO_LOGPATH=$HOST_PATH$DEFAULT_MONGO_LOGPATH" >> config
 chmod +x config
 
 echo -e "Configuration saved to file ${GREEN}config${NC}."

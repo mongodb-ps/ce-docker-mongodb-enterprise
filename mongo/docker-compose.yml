@@ -1,10 +1,9 @@
 services:
   mongo:
-    image: "${DOCKER_USERNAME}/mongo:${OM_VERSION}"
-    hostname: mongo_${IDX}
+    image: "${NAMESPACE}/mongodb:${OM_VERSION}"
     volumes:
-      - ${BASE_DBPATH}/mongo_${IDX}/db:/data/db
-      - ${BASE_DBPATH}/mongo_${IDX}/log:/data/log
+      - mongo_data:/data/db
+      - mongo_logs:/data/log
     ports:
       - "27017"
     restart: always
@@ -18,3 +17,16 @@ services:
 networks:
   mongo:
     driver: bridge
+volumes:
+  mongo_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${MONGO_DBPATH}
+      o: bind
+  mongo_logs:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${MONGO_LOGPATH}
+      o: bind
