@@ -1,7 +1,36 @@
 PROJECT_NAME = mongodb-enterprise-docker
 
-.PHONY: config reconfig build-om build-mongo build rebuild clean destroy run-om stop-om run-mongo stop-mongo stop
+.PHONY: config reconfig build-om build-mongo build rebuild clean destroy run-om stop-om run-mongo stop-mongo stop help
 COUNT ?= 3
+
+.DEFAULT_GOAL := help
+
+help: ## Show this help message
+	@echo "Usage: make [target]"
+	@echo ""
+	@echo "Available targets:"
+	@echo "  config        - Run configuration script to create config file"
+	@echo "  reconfig      - Remove existing config and run configuration again"
+	@echo "  build-om      - Build Ops Manager Docker image"
+	@echo "  build-mongo   - Build MongoDB Automation Agent Docker image"
+	@echo "  build         - Build all required Docker images (currently only Ops Manager)"
+	@echo "  rebuild       - Clean and rebuild all images"
+	@echo "  clean-om      - Remove Ops Manager Docker images"
+	@echo "  clean-mongo   - Remove MongoDB Automation Agent Docker image"
+	@echo "  clean         - Remove all Docker images"
+	@echo "  run-om        - Start Ops Manager and create admin user"
+	@echo "  run-mongo     - Start MongoDB instances (use COUNT=N to specify number, default: 3)"
+	@echo "  stop-om       - Stop Ops Manager"
+	@echo "  stop-mongo    - Stop MongoDB instances"
+	@echo "  stop          - Stop all services"
+	@echo "  destroy       - Stop services, clean images, prune system, and remove data"
+	@echo "  help          - Show this help message"
+	@echo ""
+	@echo "Examples:"
+	@echo "  make config              # Configure the environment"
+	@echo "  make build               # Build Docker images"
+	@echo "  make run-om              # Start Ops Manager"
+	@echo "  make run-mongo COUNT=5   # Start 5 MongoDB instances"
 
 config:
 	./configure
@@ -16,7 +45,7 @@ build-mongo:
 	cd mongo; \
 	./build; \
 	cd ..
-build: build-om build-mongo
+build: build-om
 clean-om:
 	source config; \
 	echo "Removing Ops Manager Docker images..."; \
@@ -45,26 +74,33 @@ run-om:
 	done; \
 	echo "Ops Manager started. Initializing..."; \
 	cd ../../; \
-	RESPONSE=$$(curl --digest \
-	--header "Accept: application/json" \
-	--header "Content-Type: application/json" \
-	--silent \
-	--request POST "http://localhost:$${OM_MAPPING_PORT}/api/public/v1.0/unauth/users?whitelist=192.168.65.1&whitelist=127.0.0.1&whitelist=172.17.0.1" \
-	--data "{\"username\": \"$${OM_ADMIN_EMAIL}\", \"password\": \"$${OM_ADMIN_PWD}\", \"firstName\": \"$${OM_ADMIN_FIRSTNAME}\", \"lastName\": \"$${OM_ADMIN_LASTNAME}\"}"); \
-	PUBLIC_KEY=$$(echo "$$RESPONSE" | jq -r '.programmaticApiKey.publicKey'); \
-	PRIVATE_KEY=$$(echo "$$RESPONSE" | jq -r '.programmaticApiKey.privateKey'); \
-	echo "export PUBLIC_KEY=$$PUBLIC_KEY" >> config; \
-	echo "export PRIVATE_KEY=$$PRIVATE_KEY" >> config; \
+	if [[ "$$PUBLIC_KEY" == "" && "$$PRIVATE_KEY" == "" ]]; then \
+		RESPONSE=$$(curl --digest \
+		--header "Accept: application/json" \
+		--header "Content-Type: application/json" \
+		--silent \
+		--request POST "http://localhost:$${OM_MAPPING_PORT}/api/public/v1.0/unauth/users?whitelist=192.168.65.1&whitelist=127.0.0.1&whitelist=172.17.0.1" \
+		--data "{\"username\": \"$${OM_ADMIN_EMAIL}\", \"password\": \"$${OM_ADMIN_PWD}\", \"firstName\": \"$${OM_ADMIN_FIRSTNAME}\", \"lastName\": \"$${OM_ADMIN_LASTNAME}\"}"); \
+		PUBLIC_KEY=$$(echo "$$RESPONSE" | jq -r '.programmaticApiKey.publicKey'); \
+		PRIVATE_KEY=$$(echo "$$RESPONSE" | jq -r '.programmaticApiKey.privateKey'); \
+		echo "export PUBLIC_KEY=$$PUBLIC_KEY" >> config; \
+		echo "export PRIVATE_KEY=$$PRIVATE_KEY" >> config; \
 	echo "Ops Manager admin user created."; \
-	cd ../../; \
-	PROJECT_INFO=$$(python3 scripts/prepare_project.py); \
-	PROJECT_ID=$$(echo "$$PROJECT_INFO" | jq -r '.project_id'); \
-	AGENT_API_KEY=$$(echo "$$PROJECT_INFO" | jq -r '.agent_api_key'); \
-	AGENT_VERSION=$$(echo "$$PROJECT_INFO" | jq -r '.agent_version'); \
-	echo "export PROJECT_ID=$$PROJECT_ID" >> config; \
-	echo "export AGENT_API_KEY=$$AGENT_API_KEY" >> config; \
-	echo "export AGENT_VERSION=$$AGENT_VERSION" >> config; \
-	echo "Project prepared with ID $$PROJECT_ID and Agent API Key.";
+	else \
+		echo "Ops Manager admin user already exists. Skipping creation."; \
+	fi; \
+	if [[ "$$PROJECT_ID" != "" && "$$AGENT_API_KEY" != "" && "$$AGENT_VERSION" != "" ]]; then \
+		echo "Project already prepared. Skipping project preparation."; \
+	else \
+		PROJECT_INFO=$$(python3 scripts/prepare_project.py); \
+		PROJECT_ID=$$(echo "$$PROJECT_INFO" | jq -r '.project_id'); \
+		AGENT_API_KEY=$$(echo "$$PROJECT_INFO" | jq -r '.agent_api_key'); \
+		AGENT_VERSION=$$(echo "$$PROJECT_INFO" | jq -r '.agent_version'); \
+		echo "export PROJECT_ID=$$PROJECT_ID" >> config; \
+		echo "export AGENT_API_KEY=$$AGENT_API_KEY" >> config; \
+		echo "export AGENT_VERSION=$$AGENT_VERSION" >> config; \
+		echo "Project prepared with ID $$PROJECT_ID and Agent API Key."; \
+	fi;
 run-mongo:
 	source config; \
 	cd mongo; \
