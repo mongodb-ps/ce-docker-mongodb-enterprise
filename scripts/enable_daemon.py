@@ -4,7 +4,7 @@ import os
 from om_api import api_get, api_put
 
 OM_URL = "http://host.docker.internal:8080"
-HEADDB_PATH = "/headDB"
+HEADDB_PATH = "/headDB/"
 public_key = os.environ["PUBLIC_KEY"]
 private_key = os.environ["PRIVATE_KEY"]
 
