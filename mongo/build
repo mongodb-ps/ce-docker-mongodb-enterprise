@@ -29,6 +29,7 @@ if [[ -z "`docker images -q ${NAMESPACE}/mongodb:$OM_VERSION`" ]]; then
     docker build \
         --build-arg AGENT_VERSION=$AGENT_VERSION \
         --build-arg OM_URL=$OM_URL \
+        --build-arg IS_ARM=$IS_ARM \
         --progress=plain \
         ./ -t ${NAMESPACE}/mongodb:$OM_VERSION
     if [[ $? -ne 0 ]]; then

@@ -3,6 +3,7 @@ FROM amazonlinux:2
 
 ARG OM_URL
 ARG AGENT_VERSION
+ARG IS_ARM
 
 COPY ./setup.sh /setup.sh
 COPY ./entrypoint.sh /entrypoint.sh
