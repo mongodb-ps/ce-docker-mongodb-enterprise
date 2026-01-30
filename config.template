@@ -27,3 +27,6 @@ export DEFAULT_BACKUPD_LOGS="/backup-daemon-logs"
 export DEFAULT_OM_ADMIN_EMAIL="admin@mongodb.com"
 export DEFAULT_OM_ADMIN_FIRSTNAME="Admin"
 export DEFAULT_OM_ADMIN_LASTNAME="User"
+
+# MongoDB
+export DEFAULT_MONGO_MAPPING_PORT=37017
