@@ -43,7 +43,7 @@ mms.mail.hostname=smtp.dummy.com
 mms.mail.port=25
 mms.ignoreInitialUiSetup=true
 automation.versions.directory=/mongodb-mms/mongodb-releases
-" | sudo tee -a /opt/mongodb/mms/conf/conf-mms.properties
+" | tee -a /mongodb-mms/conf/conf-mms.properties
 chown mongodb-mms:mongodb-mms /gen.key;
 chmod 400 /gen.key
 
