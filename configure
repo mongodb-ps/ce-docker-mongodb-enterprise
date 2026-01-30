@@ -67,6 +67,16 @@ if [ "$ALL_FOUND" = false ]; then
     exit 1
 fi
 
+echo "Detecting system architecture..."
+ARCH=$(uname -m)
+if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
+    IS_ARM=true
+else
+    IS_ARM=false
+fi
+
+echo "是否为 ARM 平台: $IS_ARM"
+
 echo "Checking available MongoDB versions..."
 # Fetch available MongoDB versions from Docker Hub
 AVAILABLE_MONGO_VERSIONS=$(curl -sS "https://hub.docker.com/v2/repositories/mongodb/mongodb-enterprise-server/tags/?page_size=100" \
@@ -135,6 +145,7 @@ if [[ -z $OM_ADMIN_LASTNAME ]]; then
 fi
 
 echo "#!/bin/bash" > config
+echo "export IS_ARM=$IS_ARM" >> config
 echo "export NAMESPACE=$DEFAULT_NAMESPACE" >> config
 echo "export HOST_PATH=$HOST_PATH" >> config
 echo "export APPDB_VERSION=$APPDB_VERSION" >> config

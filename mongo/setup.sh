@@ -7,7 +7,11 @@ yum install -y cyrus-sasl cyrus-sasl-gssapi cyrus-sasl-plain krb5-libs libcurl o
 
 # Download automation agent
 cd /tmp
-AGENT_URL="$OM_URL/download/agent/automation/mongodb-mms-automation-agent-$AGENT_VERSION-1.rhel7_x86_64.tar.gz"
+if [[ "$IS_ARM" == "true" ]]; then
+    AGENT_URL="$OM_URL/download/agent/automation/mongodb-mms-automation-agent-$AGENT_VERSION-1.rhel7_x86_64.tar.gz"
+else
+    AGENT_URL="$OM_URL/download/agent/automation/mongodb-mms-automation-agent-$AGENT_VERSION-1.amzn2_aarch64.tar.gz"
+fi
 curl -OL $AGENT_URL
 tar -zxvf mongodb-mms-automation-agent-$AGENT_VERSION-1.rhel7_x86_64.tar.gz -C /opt/
 mv /opt/mongodb-mms-automation-agent-$AGENT_VERSION-1.rhel7_x86_64 /opt/mongodb-mms-automation
