@@ -10,7 +10,7 @@ cd /tmp
 AGENT_URL="$OM_URL/download/agent/automation/mongodb-mms-automation-agent-$AGENT_VERSION-1.rhel7_x86_64.tar.gz"
 curl -OL $AGENT_URL
 tar -zxvf mongodb-mms-automation-agent-$AGENT_VERSION-1.rhel7_x86_64.tar.gz -C /opt/
-mv /opt/mongodb-mms-automation-agent-$AGENT_VERSION-1.rhel7_x86_64 /opt/mongodb-mms-automation-agent
+mv /opt/mongodb-mms-automation-agent-$AGENT_VERSION-1.rhel7_x86_64 /opt/mongodb-mms-automation
 groupadd -g 900 -r mongod
 useradd -u 900 -r -g mongod -s /sbin/nologin -M mongod
 
