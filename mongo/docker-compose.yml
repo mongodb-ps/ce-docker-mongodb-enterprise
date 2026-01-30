@@ -6,6 +6,10 @@ services:
       - mongo_logs:/data/log
     ports:
       - "27017"
+    environment:
+      OM_URL: "http://host.docker.internal:${OM_MAPPING_PORT}"
+      PROJECT_ID: "${PROJECT_ID}"
+      AGENT_API_KEY: "${AGENT_API_KEY}"
     restart: always
     networks:
       - mongo
