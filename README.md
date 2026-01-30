@@ -8,13 +8,15 @@
 This project aims building MongoDB and Ops Manager Docker image.
 - The Ops Manager image is built based on `ubuntu:jammy`.
 - Th AppDB is using MongoDB official image `mongodb/mongodb-enterprise-server`.
-- The MongoDB image is built based on `amazonlinux:2` for better backward compatibility.
+- The MongoDB image is built based on `amazonlinux:2` for better backwards compatibility.
 
 ## 2 How To Use
 Everything is auto-wired so you can use it without much settings. Follow these steps to start Ops Manager and MongoDB.
 
 ### 2.1 Configure
-This guides you choosing AppDB and Ops Manager versions, and some other useful options.
+The guide lets you choosing AppDB and Ops Manager versions, as well as some other useful options. When chooing,
+- You can input versions not listed by the guide, but make sure they exist.
+- You should choose compatible versions of Ops Manager and AppDB.
 ```bash
 make config
 ```
