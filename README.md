@@ -50,6 +50,11 @@ To stop MongoDB instances
 ```bash
 make stop-mongo
 ```
+Note in the container we mapped 2 paths to host storage:
+- `/data/db` -> `$MONGO_DBPATH/mongo_<container_index>`
+- `/data/log` -> `MONGO_LOGPATH/mongo_<container_index>`
+
+You should use them for data files and log files.
 
 ### 2.4 Clean Up
 The `clean` target will stop container and remove images but will keep the data untouched.
