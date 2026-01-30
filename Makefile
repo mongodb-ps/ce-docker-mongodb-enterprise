@@ -1,5 +1,5 @@
 PROJECT_NAME = mongodb-enterprise-docker
-
+.SILENT:
 .PHONY: config reconfig build-om build-mongo build rebuild clean destroy run-om stop-om run-mongo stop-mongo stop help
 COUNT ?= 3
 
@@ -104,7 +104,12 @@ run-om:
 run-mongo:
 	source config; \
 	cd mongo; \
-	docker-compose up -d --scale mongo=$(COUNT); \
+	for IDX in $$(seq 1 $(COUNT)); do \
+		export IDX; \
+		mkdir -p "$${MONGO_DBPATH}/mongo_$${IDX}"; \
+		mkdir -p "$${MONGO_LOGPATH}/mongo_$${IDX}"; \
+		docker-compose up --scale mongo=$$IDX --no-recreate -d; \
+	done; \
 	cd ../;
 stop-om:
 	source config; \
