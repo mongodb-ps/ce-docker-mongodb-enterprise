@@ -32,6 +32,18 @@ ls -l /mongodb-mms/jdk/
 cd /mongodb-mms/conf/;
 sed -i 's%mongo.mongoUri=.*%mongo.mongoUri=mongodb://'$ROOT_USER':'$ROOT_PWD'@appdb:27017/?maxPoolSize=150%' conf-mms.properties;
 sed -i 's%ENC_KEY_PATH=.*%ENC_KEY_PATH=/gen.key%' mms.conf;
+echo -e "
+mms.centralUrl=http://host.docker.internal:$OM_MAPPING_PORT
+mms.fromEmailAddr=admin@dummy.com
+mms.replyToEmailAddr=admin@dummy.com
+mms.adminEmailAddr=admin@dummy.com
+mms.emailDaoClass=com.xgen.svc.core.dao.email.JavaEmailDao
+mms.mail.transport=smtp
+mms.mail.hostname=smtp.dummy.com
+mms.mail.port=25
+mms.ignoreInitialUiSetup=true
+automation.versions.directory=/mongodb-mms/mongodb-releases
+" | sudo tee -a /opt/mongodb/mms/conf/conf-mms.properties
 chown mongodb-mms:mongodb-mms /gen.key;
 chmod 400 /gen.key
 
