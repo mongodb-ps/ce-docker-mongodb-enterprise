@@ -15,7 +15,7 @@ else
 fi
 
 echo -e "Setting up directories. Base folder: ${GREEN}$HOST_PATH${NC}"
-mkdir -p $HOST_PATH $APPDB_DBPATH $RELEASES $OM_LOGS $OM_SNAPSHOTS $OM_HEAD_DB $BACKUPD_LOGS
+mkdir -p $HOST_PATH $APPDB_DBPATH $RELEASES $OM_LOGS $OM_SNAPSHOTS $OM_HEAD_DB $BACKUPD_LOGS $MONGO_DBPATH $MONGO_LOGPATH
 
 # Pull MongoDB image for AppDB
 echo -e "Pulling MongoDB image for AppDB: ${GREEN}mongodb/mongodb-enterprise-server:$APPDB_VERSION${NC}"
