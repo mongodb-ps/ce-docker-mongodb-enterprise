@@ -66,7 +66,7 @@ destroy: clean
 run-om:
 	source config; \
 	cd ops-manager/om; \
-	docker-compose up -d; \
+	docker-compose up --no-recreate -d; \
 	echo "Ops Manager started. Initializing..."; \
 	cd ../../; \
 	if [[ "$$PUBLIC_KEY" == "" && "$$PRIVATE_KEY" == "" ]]; then \
