@@ -69,7 +69,7 @@ services:
     networks:
       - opsmanager
     healthcheck:
-      test: ["CMD-SHELL", "/mongodb-mms/bin/mongodb-mms-backup-daemon status | grep -q '[OK]'"]
+      test: ["CMD-SHELL", "/mongodb-mms/bin/mongodb-mms-backup-daemon status | grep -q 'OK'"]
       interval: 10s
       timeout: 10s
       retries: 30
