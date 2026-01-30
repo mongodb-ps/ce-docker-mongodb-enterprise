@@ -1,0 +1,41 @@
+#!/bin/bash
+set -euo pipefail
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+CHECK_MARK=$(printf "\xE2\x9C\x94")
+CROSS_MARK=$(printf "\xE2\x9C\x98")
+
+if [[ -f ../config ]]; then
+    source ../config
+else
+    echo -e "${RED}Configuration file 'config' not found. Please run 'make config' first.${NC}"
+    exit 1
+fi
+
+# Create organization and project in Ops Manager
+echo -e "Setting up Ops Manager organization and project..."
+PROJECT_INFO=$(python3 ../scripts/prepare_project.py)
+PROJECT_ID=$(echo $PROJECT_INFO | jq -r '.project_id')
+AGENT_API_KEY=$(echo $PROJECT_INFO | jq -r '.agent_api_key')
+AGENT_VERSION=$(echo $PROJECT_INFO | jq -r '.agent_version')
+
+# Build MongoDB image.
+OM_URL="http://host.docker.internal:8080"
+if [[ -z "`docker images -q ${NAMESPACE}/mongodb:$OM_VERSION`" ]]; then
+    echo -e "Building MongoDB image: ${GREEN}${NAMESPACE}/mongodb:$OM_VERSION${NC} for Ops Manager ${GREEN}$OM_VERSION${NC}."
+    docker build \
+        --build-arg AGENT_VERSION=$AGENT_VERSION \
+        --build-arg OM_URL=$OM_URL \
+        --progress=plain \
+        ./ -t ${NAMESPACE}/mongodb:$OM_VERSION
+    if [[ $? -ne 0 ]]; then
+        echo -e "${RED}${CROSS_MARK} Failed to build MongoDB Enterprise Server image.${NC}"
+        exit 1
+    fi
+    echo -e "${GREEN}${CHECK_MARK} MongoDB Enterprise Server image built successfully.${NC}"
+else
+    echo -e "${GREEN}${CHECK_MARK} MongoDB Enterprise Server image already exists. Skip building.${NC}"
+fi
