@@ -1,7 +1,7 @@
 services:
   appdb:
     image: "mongodb/mongodb-enterprise-server:${APPDB_VERSION}"
-    container_name: appdb
+    hostname: "appdb"
     restart: always
     ports:
       - "${APPDB_MAPPING_PORT}:27017"
@@ -19,6 +19,7 @@ services:
           memory: 2G
   opsmanager:
     image: "${NAMESPACE}/ops-manager:${OM_VERSION}"
+    hostname: "opsmanager"
     restart: always
     ports:
       - "${OM_MAPPING_PORT}:8080"
