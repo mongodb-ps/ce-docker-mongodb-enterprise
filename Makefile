@@ -28,7 +28,8 @@ clean-mongo:
 	docker rmi -f $${NAMESPACE}/mongodb:$${OM_VERSION} || true;
 clean: clean-om clean-mongo
 rebuild: clean build
-destroy: stop-om clean
+destroy: stop clean
+	source config; \
 	echo "Cleaning docker system..."; \
 	docker system prune; \
 	echo "Removing host data directory..."; \

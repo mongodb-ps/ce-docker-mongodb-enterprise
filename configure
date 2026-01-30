@@ -75,7 +75,7 @@ else
     IS_ARM=false
 fi
 
-echo "是否为 ARM 平台: $IS_ARM"
+echo "Is ARM platform: $IS_ARM"
 
 echo "Checking available MongoDB versions..."
 # Fetch available MongoDB versions from Docker Hub
