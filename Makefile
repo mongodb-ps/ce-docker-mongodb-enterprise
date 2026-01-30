@@ -46,18 +46,18 @@ build-mongo:
 	./build; \
 	cd ..
 build: build-om
-clean-om:
+clean-om: stop-om
 	source config; \
 	echo "Removing Ops Manager Docker images..."; \
 	docker rmi -f $${NAMESPACE}/ops-manager:$${OM_VERSION} || true; \
 	docker rmi -f $${NAMESPACE}/backup-daemon:$${OM_VERSION} || true;
-clean-mongo:
+clean-mongo: stop-mongo
 	source config; \
 	echo "Removing MongoDB Automation Agent Docker image..."; \
 	docker rmi -f $${NAMESPACE}/mongodb:$${OM_VERSION} || true;
 clean: clean-om clean-mongo
 rebuild: clean build
-destroy: stop clean
+destroy: clean
 	source config; \
 	echo "Cleaning docker system..."; \
 	docker system prune; \
