@@ -50,12 +50,13 @@ clean-om: stop-om
 	source config; \
 	echo "Removing Ops Manager Docker images..."; \
 	docker rmi -f $${NAMESPACE}/ops-manager:$${OM_VERSION} || true; \
-	docker rmi -f $${NAMESPACE}/backup-daemon:$${OM_VERSION} || true;
+	docker rmi -f $${NAMESPACE}/backup-daemon:$${OM_VERSION} || true; \
+	docker network rm docker_mongodb || true;
 clean-mongo: stop-mongo
 	source config; \
 	echo "Removing MongoDB Automation Agent Docker image..."; \
 	docker rmi -f $${NAMESPACE}/mongodb:$${OM_VERSION} || true;
-clean: clean-om clean-mongo
+clean: clean-mongo clean-om
 rebuild: clean build
 destroy: clean
 	source config; \
