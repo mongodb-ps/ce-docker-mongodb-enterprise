@@ -86,6 +86,9 @@ run-om:
 run-mongo:
 	source config; \
 	cd mongo; \
+	export PROJECT_IDX=1; \
+	export PROJECT_ID=$$PROJECT_ID_1; \
+	export AGENT_API_KEY=$$AGENT_API_KEY_1; \
 	for IDX in $$(seq 1 $(COUNT)); do \
 		export IDX; \
 		mkdir -p "$${MONGO_DBPATH}/mongo_$${IDX}"; \

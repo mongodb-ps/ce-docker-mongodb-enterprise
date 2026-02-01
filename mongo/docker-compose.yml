@@ -1,10 +1,10 @@
 services:
   mongo:
     image: "${NAMESPACE}/mongodb:${OM_VERSION}"
-    hostname: "mongo_${IDX}"
+    hostname: "mongo_${PROJECT_IDX}_${IDX}"
     volumes:
-      - ${MONGO_DBPATH}/mongo_${IDX}:/data/db
-      - ${MONGO_LOGPATH}/mongo_${IDX}:/data/log
+      - ${MONGO_DBPATH}/mongo_${PROJECT_IDX}_${IDX}:/data/db
+      - ${MONGO_LOGPATH}/mongo_${PROJECT_IDX}_${IDX}:/data/log
     ports:
       - "27017"
     environment:
