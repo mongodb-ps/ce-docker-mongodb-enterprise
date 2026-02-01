@@ -73,12 +73,7 @@ echo "Is ARM platform: $IS_ARM"
 
 echo "Checking available MongoDB versions..."
 # Fetch available MongoDB versions from Docker Hub
-AVAILABLE_MONGO_VERSIONS=$(curl -sS "https://hub.docker.com/v2/repositories/mongodb/mongodb-enterprise-server/tags/?page_size=100" \
-| jq -r '.results[] | select(
-    (.name | test("^[0-9]+\\.[0-9]+\\.[0-9]+-ubuntu\\d+$")) and
-    (.tag_status == "active")
-  ) | .name' \
-| sort -rV)
+AVAILABLE_MONGO_VERSIONS=$(python3 scripts/fetch_mongodb_image.py)
 echo "Latest MongoDB Versions:"
 echo -e "${GREEN}$AVAILABLE_MONGO_VERSIONS${NC}"
 LATEST_MONGO_VERSION=$(echo "$AVAILABLE_MONGO_VERSIONS" | head -n 1)
