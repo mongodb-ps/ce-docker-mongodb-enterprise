@@ -14,13 +14,15 @@ help: ## Show this help message
 	@echo "  reconfig      - Remove existing config and run configuration again"
 	@echo "  build-om      - Build Ops Manager Docker image"
 	@echo "  build-mongo   - Build MongoDB Automation Agent Docker image"
+	@echo "  build-mongot  - Build MongoT Docker image"
 	@echo "  build         - Build all required Docker images (currently only Ops Manager)"
 	@echo "  rebuild       - Clean and rebuild all images"
 	@echo "  clean-om      - Remove Ops Manager Docker images"
 	@echo "  clean-mongo   - Remove MongoDB Automation Agent Docker image"
 	@echo "  clean         - Remove all Docker images"
 	@echo "  run-om        - Start Ops Manager and create admin user"
-	@echo "  run-mongo     - Start MongoDB instances (use COUNT=N to specify number, default: 3)"
+	@echo "  run-mongo     - Start MongoDB containers (use COUNT=N to specify number, default: 3)"
+	@echo "  run-mongot    - Start MongoT instances and MongoDB replica set for MongoT (use COUNT_MONGOT=N to specify number of MongoT, default: 1; Use COUNT=M to specify number of MongoDB nodes in the replica set, default: 3)"
 	@echo "  stop-om       - Stop Ops Manager"
 	@echo "  stop-mongo    - Stop MongoDB instances"
 	@echo "  stop          - Stop all services"
@@ -28,22 +30,32 @@ help: ## Show this help message
 	@echo "  help          - Show this help message"
 	@echo ""
 	@echo "Examples:"
-	@echo "  make config              # Configure the environment"
-	@echo "  make build               # Build Docker images"
-	@echo "  make run-om              # Start Ops Manager"
-	@echo "  make run-mongo COUNT=5   # Start 5 MongoDB instances"
-
+	@echo "  make config                    # Configure the environment"
+	@echo "  make build                     # Build Docker images"
+	@echo "  make run-om                    # Start Ops Manager"
+	@echo "  make run-mongo COUNT=5         # Start 5 MongoDB containers"
+	@echo "  make run-mongot COUNT=1        # Start a 1-node replica set for MongoT"
 config:
 	./configure
 reconfig:
-	rm -f config
+	rm -f config \
 	./configure
 build-om:
 	cd ops-manager; \
 	./build; \
 	cd ..
 build-mongo:
+	source config; \
+	echo "Preparing Ops Manager project for MongoDB..."; \
+	python3 scripts/prepare_project.py "MongoDB Docker" "MongoDB" 1; \
 	cd mongo; \
+	./build; \
+	cd ..
+build-mongot:
+	source config; \
+	echo "Preparing Ops Manager projects for MongoT..."; \
+	python3 scripts/prepare_project.py "MongoDB Docker" "MongoT" 2; \
+	cd mongot; \
 	./build; \
 	cd ..
 build: build-om
@@ -52,7 +64,7 @@ clean-om: stop-om
 	echo "Removing Ops Manager Docker images..."; \
 	docker rmi -f $${NAMESPACE}/ops-manager:$${OM_VERSION} || true; \
 	docker rmi -f $${NAMESPACE}/backup-daemon:$${OM_VERSION} || true; \
-	docker network rm docker_mongodb || true;
+	docker network rm docker.internal || true;
 clean-mongo: stop-mongo
 	source config; \
 	echo "Removing MongoDB Automation Agent Docker image..."; \
@@ -69,16 +81,13 @@ run-om:
 	source config; \
 	cd ops-manager/om; \
 	echo "Creating shared network for Ops Manager and MongoDB"; \
-	docker network inspect docker_mongodb >/dev/null 2>&1 || docker network create docker_mongodb; \
+	docker network inspect docker.internal >/dev/null 2>&1 || docker network create docker.internal; \
 	echo "Starting Ops Manager..."; \
 	docker-compose up --no-recreate -d --wait; \
 	echo "Ops Manager started. Creating first user..."; \
 	cd ../../; \
 	python3 scripts/create_first_user.py; \
 	source config; \
-	echo "Preparing Ops Manager projects..."; \
-	python3 scripts/prepare_project.py "MongoDB Docker" "MongoDB" 1; \
-	python3 scripts/prepare_project.py "MongoDB Docker" "MongoT" 2; \
 	echo "Enabling backup daemon..."; \
 	python3 scripts/enable_daemon.py; \
 	echo "Creating oplog store and file system store..."; \
@@ -94,7 +103,7 @@ run-mongo:
 		export IDX; \
 		mkdir -p "$${MONGO_DBPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
 		mkdir -p "$${MONGO_LOGPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
-		docker-compose up --scale mongo=$$IDX --no-recreate -d; \
+		docker-compose up --scale mongodb=$$IDX --no-recreate -d; \
 	done; \
 	cd ../;
 run-mongot:
@@ -103,13 +112,20 @@ run-mongot:
 	export PROJECT_IDX=2; \
 	export PROJECT_ID=$$PROJECT_ID_2; \
 	export AGENT_API_KEY=$$AGENT_API_KEY_2; \
+	export HOST_COUNT=$(COUNT_MONGOT); \
 	for IDX in $$(seq 1 $(COUNT_MONGOT)); do \
 		export IDX; \
 		mkdir -p "$${MONGO_DBPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
 		mkdir -p "$${MONGO_LOGPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
 		docker-compose up --scale mongot_mongo=$$IDX --no-recreate -d; \
 	done; \
-	cd ../;
+	cd ../; \
+	echo "Creating MongoDB cluster for search..."; \
+	export LATEST_VERSION=$$(python3 scripts/latest_version.py); \
+	export RS_NAME="rs_mongot"; \
+	export PROJECT_IDX=2; \
+	python3 scripts/create_cluster.py;
+	echo "MongoDB cluster for MongoT created.";
 stop-om:
 	source config; \
 	cd ops-manager/om; \
@@ -117,11 +133,18 @@ stop-om:
 stop-mongo:
 	source config; \
 	cd mongo; \
+	export PROJECT_IDX=1; \
+	export PROJECT_ID=$$PROJECT_ID_1; \
+	export AGENT_API_KEY=$$AGENT_API_KEY_1; \
 	export IDX=1; \
 	docker-compose down
 stop-mongot:
 	source config; \
 	cd mongot; \
-	export IDX=2; \
+	export PROJECT_IDX=2; \
+	export PROJECT_ID=$$PROJECT_ID_2; \
+	export AGENT_API_KEY=$$AGENT_API_KEY_2; \
+	export IDX=1; \
+	export RS_NAME="rs_mongot"; \
 	docker-compose down
 stop: stop-om stop-mongo stop-mongot
