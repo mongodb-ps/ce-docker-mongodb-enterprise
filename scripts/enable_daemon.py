@@ -15,7 +15,7 @@ for daemon in daemons:
     machine = daemon["machine"]
     machine["headRootDirectory"] = HEADDB_PATH
     if daemon["configured"]:
-        print(f"Daemon {daemon_id}/{machine['machine']} is already enabled.")
+        print(f"Daemon {daemon_id}/{machine['machine']} already enabled.")
         continue
     print(f"Enabling daemon {daemon_id}/{machine['machine']}...")
     DAEMON_PUT_URL = f"{OM_URL}/api/public/v1.0/admin/backup/daemon/configs/{machine['machine']}/"

@@ -22,4 +22,4 @@ services:
 networks:
   docker_mongodb:
     external: true
-    name: docker_mongodb
+    name: docker.internal
