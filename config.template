@@ -39,3 +39,5 @@ export DEFAULT_MONGO_LOGPATH="/mongo-logs"
 
 # MongoT credentials
 export DEFAULT_MONGOT_USER="mongot"
+# Store MongoT data files here on host
+export DEFAULT_MONGOT_DATAPATH="/mongot-data"
