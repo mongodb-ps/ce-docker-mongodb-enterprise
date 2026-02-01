@@ -1,6 +1,6 @@
 PROJECT_NAME = mongodb-enterprise-docker
 .SILENT:
-.PHONY: config reconfig build-om build-mongo build rebuild clean destroy run-om stop-om run-mongo stop-mongo stop help
+.PHONY: config reconfig build-om build-mongo build rebuild clean destroy run-om stop-om run-mongo stop-mongo run-mongot stop-mongot stop help
 COUNT ?= 3
 
 .DEFAULT_GOAL := help
@@ -91,9 +91,22 @@ run-mongo:
 	export AGENT_API_KEY=$$AGENT_API_KEY_1; \
 	for IDX in $$(seq 1 $(COUNT)); do \
 		export IDX; \
-		mkdir -p "$${MONGO_DBPATH}/mongo_$${IDX}"; \
-		mkdir -p "$${MONGO_LOGPATH}/mongo_$${IDX}"; \
+		mkdir -p "$${MONGO_DBPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
+		mkdir -p "$${MONGO_LOGPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
 		docker-compose up --scale mongo=$$IDX --no-recreate -d; \
+	done; \
+	cd ../;
+run-mongot:
+	source config; \
+	cd mongot; \
+	export PROJECT_IDX=2; \
+	export PROJECT_ID=$$PROJECT_ID_2; \
+	export AGENT_API_KEY=$$AGENT_API_KEY_2; \
+	for IDX in $$(seq 1 $(COUNT)); do \
+		export IDX; \
+		mkdir -p "$${MONGO_DBPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
+		mkdir -p "$${MONGO_LOGPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
+		docker-compose up --scale mongot_mongo=$$IDX --no-recreate -d; \
 	done; \
 	cd ../;
 stop-om:
@@ -105,4 +118,9 @@ stop-mongo:
 	cd mongo; \
 	export IDX=1; \
 	docker-compose down
-stop: stop-om stop-mongo
+stop-mongot:
+	source config; \
+	cd mongot; \
+	export IDX=2; \
+	docker-compose down
+stop: stop-om stop-mongo stop-mongot
