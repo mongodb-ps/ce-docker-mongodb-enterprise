@@ -11,6 +11,8 @@ PUBLIC_KEY = os.environ["PUBLIC_KEY"]
 PRIVATE_KEY = os.environ["PRIVATE_KEY"]
 ROOT_USER = os.environ["ROOT_USER"]
 ROOT_PWD = os.environ["ROOT_PWD"]
+MONGOT_USER = os.environ["MONGOT_USER"]
+MONGOT_PWD = os.environ["MONGOT_PWD"]
 KEY_FILE_CONTENT = os.environ["KEY_FILE_CONTENT"]
 AUTO_PWD = os.environ["AUTO_PWD"]
 RS = os.environ["RS_NAME"]
@@ -44,6 +46,14 @@ auto_config["auth"] = {
             "roles": [{"db": "admin", "role": "root"}],
             "initPwd": f"{ROOT_PWD}",
             "user": f"{ROOT_USER}",
+        },
+        {
+            "authenticationRestrictions": [],
+            "db": "admin",
+            "mechanisms": ["SCRAM-SHA-1", "SCRAM-SHA-256"],
+            "roles": [{"db": "admin", "role": "searchCoordinator"}],
+            "initPwd": f"{MONGOT_PWD}",
+            "user": f"{MONGOT_USER}",
         }
     ],
 }
@@ -86,6 +96,12 @@ auto_config["processes"].extend(
                 "replication": {"replSetName": f"{RS}"},
                 "storage": {"dbPath": "/data/db"},
                 "systemLog": {"destination": "file", "path": "/data/log/mongodb.log"},
+                "setParameter": {
+                    "searchIndexManagementHostAndPort": "mongot:27028",
+                    "mongotHost": "mongot:27028",
+                    "skipAuthenticationToSearchIndexManagementServer": False,
+                    "useGrpcForSearch": True,
+                }
             },
             "auditLogRotate": {"sizeThresholdMB": 1000.0, "timeThresholdHrs": 24},
             "authSchemaVersion": 5,

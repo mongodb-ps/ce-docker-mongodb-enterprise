@@ -36,3 +36,6 @@ export DEFAULT_MONGO_MAPPING_PORT=37017
 export DEFAULT_MONGO_DBPATH="/mongo-data"
 # Store MongoDB log files here on host
 export DEFAULT_MONGO_LOGPATH="/mongo-logs"
+
+# MongoT credentials
+export DEFAULT_MONGOT_USER="mongot"

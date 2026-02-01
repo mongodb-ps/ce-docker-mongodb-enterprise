@@ -133,6 +133,8 @@ if [[ -z $OM_ADMIN_LASTNAME ]]; then
     OM_ADMIN_LASTNAME=$DEFAULT_OM_ADMIN_LASTNAME
 fi
 
+MONGOT_PWD=$(generate_password 16)
+
 echo "#!/bin/bash" > config
 echo "export IS_ARM=$IS_ARM" >> config
 echo "export NAMESPACE=$DEFAULT_NAMESPACE" >> config
@@ -160,6 +162,8 @@ echo "export MONGO_DBPATH=$HOST_PATH$DEFAULT_MONGO_DBPATH" >> config
 echo "export MONGO_LOGPATH=$HOST_PATH$DEFAULT_MONGO_LOGPATH" >> config
 echo "export KEY_FILE_CONTENT='$(openssl rand -base64 756)'" >> config
 echo "export AUTO_PWD='$(generate_password 16)'" >> config
+echo "export MONGOT_USER=$DEFAULT_MONGOT_USER" >> config
+echo "export MONGOT_PWD='$MONGOT_PWD'" >> config
 chmod +x config
 
 echo -e "Configuration saved to file ${GREEN}config${NC}."
