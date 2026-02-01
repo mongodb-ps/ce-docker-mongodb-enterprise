@@ -1,5 +1,6 @@
 *.deb
 *.tar.gz
+*.tgz
 .DS_Store
 config
 mongodb-mms*
