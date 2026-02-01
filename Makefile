@@ -73,21 +73,12 @@ run-om:
 	docker-compose up --no-recreate -d --wait; \
 	echo "Ops Manager started. Initializing..."; \
 	cd ../../; \
-	if [[ "$$PUBLIC_KEY" == "" && "$$PRIVATE_KEY" == "" ]]; then \
-		RESPONSE=$$(curl --digest \
-		--header "Accept: application/json" \
-		--header "Content-Type: application/json" \
-		--silent \
-		--request POST "http://localhost:$${OM_MAPPING_PORT}/api/public/v1.0/unauth/users?whitelist=192.168.65.1&whitelist=127.0.0.1&whitelist=172.17.0.1" \
-		--data "{\"username\": \"$${OM_ADMIN_EMAIL}\", \"password\": \"$${OM_ADMIN_PWD}\", \"firstName\": \"$${OM_ADMIN_FIRSTNAME}\", \"lastName\": \"$${OM_ADMIN_LASTNAME}\"}"); \
-		export PUBLIC_KEY=$$(echo "$$RESPONSE" | jq -r '.programmaticApiKey.publicKey'); \
-		export PRIVATE_KEY=$$(echo "$$RESPONSE" | jq -r '.programmaticApiKey.privateKey'); \
-		echo "export PUBLIC_KEY=$$PUBLIC_KEY" >> config; \
-		echo "export PRIVATE_KEY=$$PRIVATE_KEY" >> config; \
-	echo "Ops Manager admin user created."; \
-	else \
-		echo "Ops Manager admin user already exists. Skipping creation."; \
+	KEYS=$$(python3 scripts/create_first_user.py); \
+	if [ $$? -ne 0 ]; then \
+		exit 1; \
 	fi; \
+	echo "$$KEYS" >> config; \
+	$$KEYS; \
 	if [[ "$$PROJECT_ID" != "" && "$$AGENT_API_KEY" != "" && "$$AGENT_VERSION" != "" ]]; then \
 		echo "Project already prepared. Skipping project preparation."; \
 	else \
