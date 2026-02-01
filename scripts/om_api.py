@@ -1,4 +1,5 @@
 """Call Ops Manager API with digest authentication."""
+import os
 import requests
 from requests.auth import HTTPDigestAuth
 
@@ -6,6 +7,18 @@ HEADERS = {
     "Content-Type": "application/json",
     "Accept": "application/json",
 }
+OM_MAPPING_PORT = os.getenv("OM_MAPPING_PORT", "8080")
+OM_URL = f"http://host.docker.internal:{OM_MAPPING_PORT}"
+
+def api_post_anonymous(url, data, headers=None):
+    """Make an anonymous API POST request to the given URL."""
+    resp = requests.post(
+        url,
+        json=data,
+        headers=headers or HEADERS,
+        timeout=10
+    )
+    return resp
 
 def api_post(url, public_key, private_key, data, headers=None):
     """Make an API POST request to the given URL with digest authentication."""

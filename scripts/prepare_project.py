@@ -2,9 +2,9 @@
 import os
 import json
 import sys
-from om_api import api_get, api_post
+from om_api import api_get, api_post, OM_URL
 
-URL_PREFIX = "http://host.docker.internal:8080/api/public/v1.0"
+URL_PREFIX = f"{OM_URL}/api/public/v1.0"
 ORG_NAME = "MongoDB Docker"
 PROJECT_NAME = "MongoDB"
 public_key = os.environ["PUBLIC_KEY"]

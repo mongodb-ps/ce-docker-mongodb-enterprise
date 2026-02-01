@@ -1,13 +1,12 @@
 """Create oplog store for OM if not exists."""
 import os
 import sys
-from om_api import api_post, api_get
+from om_api import api_post, api_get, OM_URL
 
 public_key = os.environ["PUBLIC_KEY"]
 private_key = os.environ["PRIVATE_KEY"]
 root_user = os.environ["ROOT_USER"]
 root_pwd = os.environ["ROOT_PWD"]
-OM_URL = "http://host.docker.internal:8080"
 FS_STORE_ID = "fs_store"
 FS_STORE_URL_POST = f"{OM_URL}/api/public/v1.0/admin/backup/snapshot/fileSystemConfigs"
 FS_STORE_URL_GET = f"{FS_STORE_URL_POST}/{FS_STORE_ID}"
