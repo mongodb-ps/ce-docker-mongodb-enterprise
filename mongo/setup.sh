@@ -25,6 +25,8 @@ mkdir -p /data/{db,log}
 chown mongod:mongod -R /data
 mkdir -p /var/lib/mongodb-mms-automation
 chown mongod:mongod -R /var/lib/mongodb-mms-automation
+mkdir -p /var/log/mongodb-mms-automation
+chown mongod:mongod -R /var/log/mongodb-mms-automation
 
 # Clean up
 yum clean all
