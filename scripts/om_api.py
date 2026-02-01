@@ -20,6 +20,16 @@ def api_post_anonymous(url, data, headers=None):
     )
     return resp
 
+def api_get_anonymous(url, data, headers=None):
+    """Make an anonymous API GET request to the given URL."""
+    resp = requests.get(
+        url,
+        params=data,
+        headers=headers or HEADERS,
+        timeout=10,
+    )
+    return resp
+
 def api_post(url, public_key, private_key, data, headers=None):
     """Make an API POST request to the given URL with digest authentication."""
     resp = requests.post(
