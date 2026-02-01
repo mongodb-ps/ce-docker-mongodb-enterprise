@@ -17,10 +17,7 @@ fi
 
 # Create organization and project in Ops Manager
 echo -e "Setting up Ops Manager organization and project..."
-PROJECT_INFO=$(python3 ../scripts/prepare_project.py)
-PROJECT_ID=$(echo $PROJECT_INFO | jq -r '.project_id')
-AGENT_API_KEY=$(echo $PROJECT_INFO | jq -r '.agent_api_key')
-AGENT_VERSION=$(echo $PROJECT_INFO | jq -r '.agent_version')
+AGENT_VERSION=$AGENT_VERSION_1
 
 # Build MongoDB image.
 OM_URL="http://host.docker.internal:8080"
