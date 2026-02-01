@@ -27,7 +27,7 @@ else:
     if res.status_code >= 200 and res.status_code < 300:
         print(f"Successfully created file system store {FS_STORE_ID}.")
     else:
-        print(f"Failed to create file system store {FS_STORE_ID}: {res.text}")
+        print(f"Failed to create file system store {FS_STORE_ID}: {res.text}", file=sys.stderr)
         sys.exit(1)
 
 OPLOG_STORE_ID = "oplog_store"
@@ -46,5 +46,5 @@ else:
     if res.status_code >= 200 and res.status_code < 300:
         print(f"Successfully created oplog store {OPLOG_STORE_ID}.")
     else:
-        print(f"Failed to create oplog store {OPLOG_STORE_ID}: {res.text}")
+        print(f"Failed to create oplog store {OPLOG_STORE_ID}: {res.text}", file=sys.stderr)
         sys.exit(1)

@@ -25,7 +25,7 @@ for daemon in daemons:
         "machine": machine
     })
     if daemon_response.status_code != 200:
-        print(f"Failed to enable daemon {daemon_id}/{machine['machine']}: {daemon_response.text}")
+        print(f"Failed to enable daemon {daemon_id}/{machine['machine']}: {daemon_response.text}", file=sys.stderr)
     else:
         print(f"Daemon {daemon_id}/{machine['machine']} enabled successfully.")
 sys.exit(0)
