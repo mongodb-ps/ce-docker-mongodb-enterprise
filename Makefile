@@ -1,6 +1,6 @@
 PROJECT_NAME = mongodb-enterprise-docker
 .SILENT:
-.PHONY: config reconfig build-om build-mongo build rebuild clean destroy run-om stop-om run-mongo stop-mongo run-mongot stop-mongot stop help
+.PHONY: config reconfig build-om build-mongo build rebuild clean-om clean-mongo clean-mongot clean destroy run-om stop-om run-mongo stop-mongo run-mongot stop-mongot stop help
 COUNT ?= 3
 COUNT_MONGOT ?= 1
 
@@ -19,6 +19,7 @@ help: ## Show this help message
 	@echo "  rebuild       - Clean and rebuild all images"
 	@echo "  clean-om      - Remove Ops Manager Docker images"
 	@echo "  clean-mongo   - Remove MongoDB Automation Agent Docker image"
+	@echo "  clean-mongot  - Remove MongoT Docker images"
 	@echo "  clean         - Remove all Docker images"
 	@echo "  run-om        - Start Ops Manager and create admin user"
 	@echo "  run-mongo     - Start MongoDB containers (use COUNT=N to specify number, default: 3)"
@@ -64,14 +65,24 @@ clean-om: stop-om
 	echo "Removing Ops Manager Docker images..."; \
 	docker rmi -f $${NAMESPACE}/ops-manager:$${OM_VERSION} || true; \
 	docker rmi -f $${NAMESPACE}/backup-daemon:$${OM_VERSION} || true; \
-	docker network rm docker.internal || true;
 clean-mongo: stop-mongo
 	source config; \
 	echo "Removing MongoDB Automation Agent Docker image..."; \
 	docker rmi -f $${NAMESPACE}/mongodb:$${OM_VERSION} || true;
-clean: clean-mongo clean-om
+clean-mongot: stop-mongot
+	source config; \
+	echo "Removing MongoT Docker images..."; \
+	docker rmi -f $${NAMESPACE}/mongot:$${OM_VERSION} || true;
+clean: clean-mongot clean-mongo clean-om
+	docker network rm docker_mongodb || true;
 rebuild: clean build
-destroy: clean
+destroy:
+	read -p "Are you sure you want to destroy all data and images? This action cannot be undone. (y/N): " CONFIRM; \
+	if [ "$$CONFIRM" != "y" ] && [ "$$CONFIRM" != "Y" ]; then \
+		echo "Destroy operation cancelled."; \
+		exit 0; \
+	fi; \
+	$(MAKE) clean; \
 	source config; \
 	echo "Cleaning docker system..."; \
 	docker system prune; \
@@ -81,7 +92,7 @@ run-om:
 	source config; \
 	cd ops-manager/om; \
 	echo "Creating shared network for Ops Manager and MongoDB"; \
-	docker network inspect docker.internal >/dev/null 2>&1 || docker network create docker.internal; \
+	docker network inspect docker_mongodb >/dev/null 2>&1 || docker network create docker_mongodb; \
 	echo "Starting Ops Manager..."; \
 	docker-compose up --no-recreate -d --wait; \
 	echo "Ops Manager started. Creating first user..."; \
@@ -112,8 +123,8 @@ run-mongot:
 	export PROJECT_IDX=2; \
 	export PROJECT_ID=$$PROJECT_ID_2; \
 	export AGENT_API_KEY=$$AGENT_API_KEY_2; \
-	export HOST_COUNT=$(COUNT_MONGOT); \
-	for IDX in $$(seq 1 $(COUNT_MONGOT)); do \
+	export HOST_COUNT=$(COUNT); \
+	for IDX in $$(seq 1 $(COUNT)); do \
 		export IDX; \
 		mkdir -p "$${MONGO_DBPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
 		mkdir -p "$${MONGO_LOGPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
@@ -147,4 +158,4 @@ stop-mongot:
 	export IDX=1; \
 	export RS_NAME="rs_mongot"; \
 	docker-compose down
-stop: stop-om stop-mongo stop-mongot
+stop: stop-mongot stop-mongo stop-om
