@@ -9,16 +9,24 @@ This project aims building MongoDB and Ops Manager Docker image.
 - The Ops Manager image is built based on `ubuntu:jammy`.
 - Th AppDB is using MongoDB official image `mongodb/mongodb-enterprise-server`.
 - The MongoDB image is built based on `amazonlinux:2` for better backwards compatibility.
+- Ops Manager v6, v7 and v8 are tested and should work. Other versions are not verified.
 
 ## 2 How To Use
-Everything is auto-wired so you can use it without much settings. Follow these steps to start Ops Manager and MongoDB.
+Everything is auto-wired so you can use it without much manual settings. Follow these steps to start Ops Manager and MongoDB.
 
 ### 2.1 Prerequisites
+The following dependencies are required:
+- docker
+- jq (resolve API response)
+- openssl (Generating passwords, keys)
+- python3 (Make API calls)
 
 ### 2.2 Configure
 The guide lets you choosing AppDB and Ops Manager versions, as well as some other useful options. When chooing,
-- You can input versions not listed by the guide, but make sure they exist.
+- The guide only shows the latest version of each series. You can input versions not listed, but make sure they exist.
 - You should choose compatible versions of Ops Manager and AppDB.
+- If you use your own password, make sure it meets the complexity requirement of Ops Manager (Upper / Lower case characters, numbers and symbols.).
+
 ```bash
 make config
 ```
@@ -28,7 +36,7 @@ The final configuration will be written into `config`.
 ### 2.3 Build & Start Ops Manager
 This will build the Ops Manager image and pull AppDB image.
 ```bash
-make build
+make build-om
 ```
 To start Ops Manager
 ```bash
@@ -42,7 +50,8 @@ make stop-om
 ```
 
 ### 2.4 Build & Start MongoDB
-MongoDB image building requires that your Ops Manager is up and running. Because it needs to download the agent execution from Ops Manager.
+MongoDB image building requires that your Ops Manager is up and running. Because it needs to download the agent binary from Ops Manager.  
+If you have multiple versions of agents available, the latest version will be used.
 ```bash
 make build-mongo
 ```
