@@ -15,6 +15,9 @@ else
     exit 1
 fi
 
+echo -e "Setting up directories. Base folder: ${GREEN}$HOST_PATH${NC}"
+mkdir -p $MONGO_DBPATH $MONGO_LOGPATH
+
 # Create organization and project in Ops Manager
 echo -e "Setting up Ops Manager organization and project..."
 AGENT_VERSION=$AGENT_VERSION_1
