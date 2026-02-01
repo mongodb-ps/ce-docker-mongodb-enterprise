@@ -28,30 +28,25 @@ if [[ ! -f "gen.key" ]]; then
     openssl rand 24 > gen.key
 fi
 # Build Ops Manager image
-if [[ -z "`docker images -q ${NAMESPACE}/ops-manager:${OM_VERSION}`" ]]; then
-    # image doesn't exist, build one.
-    if [[ -f "$OM_PKG_NAME" ]]; then
-        echo -e "$OM_PKG_NAME exists. Skip downloading."
-    else
-        echo -e "Downloading Ops Manager: ${GREEN}$OM_DOWNLOAD_LINK${NC}"
-        curl -OL $OM_DOWNLOAD_LINK
-    fi
-    echo -e "Building MongoDB Ops Manager image using tarball: ${GREEN}$OM_PKG_NAME${NC}"
-    docker build \
-        --build-arg OM_PKG_NAME=$OM_PKG_NAME \
-        --build-arg ROOT_USER=$ROOT_USER \
-        --build-arg ROOT_PWD=$ROOT_PWD \
-        --build-arg OM_MAPPING_PORT=$OM_MAPPING_PORT \
-        ./ -t ${NAMESPACE}/ops-manager:${OM_VERSION}
-    if [[ $? -ne 0 ]]; then
-        echo -e "${RED}${CROSS_MARK} Failed to build MongoDB Ops Manager image.${NC}"
-        exit 1
-    fi
-    echo -e "${GREEN}${CHECK_MARK} MongoDB Ops Manager image built successfully.${NC}"
-    cd ..
+if [[ -f "$OM_PKG_NAME" ]]; then
+    echo -e "$OM_PKG_NAME exists. Skip downloading."
 else
-    echo -e "${GREEN}${CHECK_MARK} MongoDB Ops Manager image already exists. Skip building.${NC}"
+    echo -e "Downloading Ops Manager: ${GREEN}$OM_DOWNLOAD_LINK${NC}"
+    curl -OL $OM_DOWNLOAD_LINK
 fi
+echo -e "Building MongoDB Ops Manager image using tarball: ${GREEN}$OM_PKG_NAME${NC}"
+docker build \
+    --build-arg OM_PKG_NAME=$OM_PKG_NAME \
+    --build-arg ROOT_USER=$ROOT_USER \
+    --build-arg ROOT_PWD=$ROOT_PWD \
+    --build-arg OM_MAPPING_PORT=$OM_MAPPING_PORT \
+    ./ -t ${NAMESPACE}/ops-manager:${OM_VERSION}
+if [[ $? -ne 0 ]]; then
+    echo -e "${RED}${CROSS_MARK} Failed to build MongoDB Ops Manager image.${NC}"
+    exit 1
+fi
+echo -e "${GREEN}${CHECK_MARK} MongoDB Ops Manager image built successfully.${NC}"
+cd ..
 
 # Build Backup Daemon image
 if [[ -z "`docker images -q ${NAMESPACE}/backup-daemon:${OM_VERSION}`" ]]; then
