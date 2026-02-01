@@ -102,6 +102,8 @@ run-om:
 	fi; \
 	echo "Enabling backup daemon..."; \
 	python3 scripts/enable_daemon.py; \
+	echo "Creating oplog store and file system store..."; \
+	python3 scripts/create_store.py; \
 	cd ../;
 run-mongo:
 	source config; \
