@@ -2,6 +2,7 @@ PROJECT_NAME = mongodb-enterprise-docker
 .SILENT:
 .PHONY: config reconfig build-om build-mongo build rebuild clean destroy run-om stop-om run-mongo stop-mongo run-mongot stop-mongot stop help
 COUNT ?= 3
+COUNT_MONGOT ?= 1
 
 .DEFAULT_GOAL := help
 
@@ -102,7 +103,7 @@ run-mongot:
 	export PROJECT_IDX=2; \
 	export PROJECT_ID=$$PROJECT_ID_2; \
 	export AGENT_API_KEY=$$AGENT_API_KEY_2; \
-	for IDX in $$(seq 1 $(COUNT)); do \
+	for IDX in $$(seq 1 $(COUNT_MONGOT)); do \
 		export IDX; \
 		mkdir -p "$${MONGO_DBPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
 		mkdir -p "$${MONGO_LOGPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
