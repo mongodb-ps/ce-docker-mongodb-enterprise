@@ -66,6 +66,9 @@ destroy: clean
 run-om:
 	source config; \
 	cd ops-manager/om; \
+	echo "Creating shared network for Ops Manager and MongoDB"; \
+	docker network inspect docker_mongodb >/dev/null 2>&1 || docker network create docker_mongodb; \
+	echo "Starting Ops Manager..."; \
 	docker-compose up --no-recreate -d --wait; \
 	echo "Ops Manager started. Initializing..."; \
 	cd ../../; \

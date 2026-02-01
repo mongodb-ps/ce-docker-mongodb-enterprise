@@ -13,12 +13,13 @@ services:
       AGENT_API_KEY: "${AGENT_API_KEY}"
     restart: always
     networks:
-      - mongo
+      - docker_mongodb
     deploy:
       resources:
         limits:
           cpus: '1'
           memory: 1G
 networks:
-  mongo:
-    driver: bridge
+  docker_mongodb:
+    external: true
+    name: docker_mongodb
