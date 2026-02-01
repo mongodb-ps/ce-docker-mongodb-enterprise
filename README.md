@@ -1,23 +1,23 @@
 # MongoDB & Ops Manager Docker Image
 
 ## 1 Summary
-**The images are for testing purpose only. DO NOT use in production!**  
-**The images are tested on Mac ARM series platforms. Other platforms are not tested.**  
-**Version 8.0 requires more memory than before. Consider allocating at least 10GB for it.**
+**DISCLAIMER:**
+THESE CODE SAMPLES ARE PROVIDED FOR EDUCATIONAL AND ILLUSTRATIVE PURPOSES ONLY,
+TO DEMONSTRATE THE FUNCTIONALITY OF SPECIFIC MONGODB FEATURES.
+THEY ARE NOT PRODUCTION-READY AND MAY LACK THE SECURITY HARDENING, ERROR HANDLING, AND TESTING REQUIRED FOR A LIVE ENVIRONMENT.
+YOU ARE RESPONSIBLE FOR TESTING, VALIDATING, AND SECURING THIS CODE WITHIN YOUR OWN ENVIRONMENT BEFORE IMPLEMENTATION.
+THIS MATERIAL IS PROVIDED "AS IS" WITHOUT WARRANTY OR LIABILITY.
 
-This project aims building MongoDB and Ops Manager Docker image.
-- The Ops Manager image is built based on `ubuntu:jammy`.
-- Th AppDB is using MongoDB official image `mongodb/mongodb-enterprise-server`.
-- The MongoDB image is built based on `amazonlinux:2` for better backwards compatibility.
-- Ops Manager v6, v7 and v8 are tested and should work. Other versions are not verified.
+This project aims building MongoDB and Ops Manager Docker image. You got the following features:
+- Ops Manager with backup (filesystem store + oplog store). Queryable backup is yet available.
+- Containers with automation agent installed (But no MongoDB deployment).
 
 ## 2 How To Use
 Everything is auto-wired so you can use it without much manual settings. Follow these steps to start Ops Manager and MongoDB.
 
 ### 2.1 Prerequisites
 The following dependencies are required:
-- docker
-- jq (resolve API response)
+- Docker
 - openssl (Generating passwords, keys)
 - python3 (Make API calls)
 
@@ -91,17 +91,8 @@ This operation will
 make destroy
 ```
 
-## 3 Features Configured
-- Basic configuration (So you can skip the guide).
-- Backup daemon.
-- Snapshot store
-- Oplog Store (Reusing AppDB)
-
-Not yet available:
-- HTTPS
-- Queryable backup
-
-## 4 Known Issues
+## 3 Additional Information
+### 3.1 Known Issues
 1. Ops Manager requires at least 4GB to start (recommended 6GB). Adjust RAM limit in `Settings->Resources->Advanced` accordingly if necessary.
 1. On my M1 sometimes docker service crash for no reason and can't even be restarted. This seems like a unresolved issue https://github.com/docker/for-mac/issues/5283The. The following command can help you kill docker:
 ```bash
@@ -109,3 +100,9 @@ kill `ps aux | grep docker | awk '{print $2}'`
 ```
 1. After restarting docker service, the IP addresses may change which may confuse OM and cause monitoring issues. Go to More->Host Mappings, clear all mappings, wait for a few minutes and the problem should be gone.
 1. SMTP configuration is a dummy one. It will not work.
+
+### 3.2 Other Information
+- The Ops Manager image is built based on `ubuntu:jammy`.
+- Th AppDB is using MongoDB official image `mongodb/mongodb-enterprise-server`.
+- The MongoDB image is built based on `amazonlinux:2` for better backwards compatibility.
+- Ops Manager v6, v7 and v8 are tested and should work. Other versions are not verified.

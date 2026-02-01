@@ -44,12 +44,6 @@ else
     echo -e "${RED}$CROSS_MARK docker not found.${NC}"
     ALL_FOUND=false
 fi
-if command -v jq >/dev/null 2>&1; then
-    echo -e "${GREEN}$CHECK_MARK jq found${NC}"
-else
-    echo -e "${RED}$CROSS_MARK jq not found.${NC}"
-    ALL_FOUND=false
-fi
 if command -v openssl >/dev/null 2>&1; then
     echo -e "${GREEN}$CHECK_MARK openssl found${NC}"
 else
