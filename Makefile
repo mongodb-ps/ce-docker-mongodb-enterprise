@@ -71,26 +71,13 @@ run-om:
 	docker network inspect docker_mongodb >/dev/null 2>&1 || docker network create docker_mongodb; \
 	echo "Starting Ops Manager..."; \
 	docker-compose up --no-recreate -d --wait; \
-	echo "Ops Manager started. Initializing..."; \
+	echo "Ops Manager started. Creating first user..."; \
 	cd ../../; \
-	KEYS=$$(python3 scripts/create_first_user.py); \
-	if [ $$? -ne 0 ]; then \
-		exit 1; \
-	fi; \
-	echo "$$KEYS" >> config; \
-	$$KEYS; \
-	if [[ "$$PROJECT_ID" != "" && "$$AGENT_API_KEY" != "" && "$$AGENT_VERSION" != "" ]]; then \
-		echo "Project already prepared. Skipping project preparation."; \
-	else \
-		PROJECT_INFO=$$(python3 scripts/prepare_project.py); \
-		PROJECT_ID=$$(echo "$$PROJECT_INFO" | jq -r '.project_id'); \
-		AGENT_API_KEY=$$(echo "$$PROJECT_INFO" | jq -r '.agent_api_key'); \
-		AGENT_VERSION=$$(echo "$$PROJECT_INFO" | jq -r '.agent_version'); \
-		echo "export PROJECT_ID=$$PROJECT_ID" >> config; \
-		echo "export AGENT_API_KEY=$$AGENT_API_KEY" >> config; \
-		echo "export AGENT_VERSION=$$AGENT_VERSION" >> config; \
-		echo "Project prepared with ID $$PROJECT_ID and Agent API Key."; \
-	fi; \
+	python3 scripts/create_first_user.py; \
+	source config; \
+	echo "Preparing Ops Manager projects..."; \
+	python3 scripts/prepare_project.py "MongoDB Docker" "MongoDB" 1; \
+	python3 scripts/prepare_project.py "MongoDB Docker" "MongoT" 2; \
 	echo "Enabling backup daemon..."; \
 	python3 scripts/enable_daemon.py; \
 	echo "Creating oplog store and file system store..."; \
@@ -113,5 +100,6 @@ stop-om:
 stop-mongo:
 	source config; \
 	cd mongo; \
+	export IDX=1; \
 	docker-compose down
 stop: stop-om stop-mongo

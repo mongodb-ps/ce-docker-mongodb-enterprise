@@ -24,14 +24,14 @@ data = {
     "lastName": last_name,
 }
 res = api_post_anonymous(FIRST_USER_URL, data)
-if res.status_code >= 200 and res.status_code < 300:
-    print("First admin user created successfully.")
-else:
+if res.status_code < 200 or res.status_code >= 300:
     print(f"Failed to create first admin user. Code: {res.status_code}, Response: {res.text}")
     sys.exit(1)
+print("First admin user created successfully.")
 
 resp_json = res.json()
 public_key = resp_json.get("programmaticApiKey", {}).get("publicKey", None)
 private_key = resp_json.get("programmaticApiKey", {}).get("privateKey", None)
-print(f"export PUBLIC_KEY={public_key}")
-print(f"export PRIVATE_KEY={private_key}")
+with open("config", "a", encoding="utf-8") as f:
+    f.write(f"export PUBLIC_KEY={public_key}\n")
+    f.write(f"export PRIVATE_KEY={private_key}\n")
