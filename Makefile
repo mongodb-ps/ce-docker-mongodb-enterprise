@@ -57,6 +57,8 @@ build-mongot:
 	echo "Preparing Ops Manager projects for MongoT..."; \
 	python3 scripts/prepare_project.py "MongoDB Docker" "MongoT" 2; \
 	cd mongot; \
+	export NUM_MONGOD=$(COUNT); \
+	export PROJECT_IDX=2; \
 	./build; \
 	cd ..
 build: build-om
