@@ -69,7 +69,7 @@ else
     IS_ARM=false
 fi
 
-echo "Is ARM platform: $IS_ARM"
+echo -e "Is ARM platform: ${GREEN}$IS_ARM${NC}"
 
 echo "Checking available MongoDB versions..."
 # Fetch available MongoDB versions from Docker Hub
