@@ -6,7 +6,7 @@ services:
       - ${MONGO_DBPATH}/mongo_${PROJECT_IDX}_${IDX}:/data/db
       - ${MONGO_LOGPATH}/mongo_${PROJECT_IDX}_${IDX}:/data/log
     ports:
-      - "27017"
+      - "${MONGO_PORT}:27017"
     environment:
       OM_URL: "http://host.docker.internal:${OM_MAPPING_PORT}"
       PROJECT_ID: "${PROJECT_ID}"

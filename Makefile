@@ -112,6 +112,7 @@ run-mongo:
 	export AGENT_API_KEY=$$AGENT_API_KEY_1; \
 	for IDX in $$(seq 1 $(COUNT)); do \
 		export IDX; \
+		export MONGO_PORT=$$(($${MONGO_MAPPING_PORT} + $$IDX - 1)); \
 		mkdir -p "$${MONGO_DBPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
 		mkdir -p "$${MONGO_LOGPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
 		docker-compose up --scale mongodb=$$IDX --no-recreate -d; \
@@ -148,6 +149,7 @@ stop-mongo:
 	export PROJECT_ID=$$PROJECT_ID_1; \
 	export AGENT_API_KEY=$$AGENT_API_KEY_1; \
 	export IDX=1; \
+	export MONGO_PORT=$${MONGO_MAPPING_PORT}; \
 	docker-compose down
 stop-mongot:
 	source config; \
