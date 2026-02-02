@@ -1,0 +1,42 @@
+#!/bin/bash
+set -euo pipefail
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+CHECK_MARK=$(printf "\xE2\x9C\x94")
+CROSS_MARK=$(printf "\xE2\x9C\x98")
+if [[ -f ../config ]]; then
+    source ../config
+else
+    echo -e "${RED}Configuration file 'config' not found. Please run 'make config' first.${NC}"
+    exit 1
+fi
+
+echo -e "Setting up directories. Base folder: ${GREEN}$HOST_PATH${NC}"
+mkdir -p $MONGOT_DATAPATH
+
+PKG_NAME_PREFIX="mongot_community_${MONGOT_VERSION}_linux"
+if [[ $IS_ARM == true ]]; then
+    echo -e "Building MongoT Docker image for ARM architecture..."
+    PKG_NAME="${PKG_NAME_PREFIX}_aarch64.tgz"
+    DOWNLOAD_URL="https://downloads.mongodb.org/mongodb-search-community/$MONGOT_VERSION/$PKG_NAME"
+else
+    echo -e "Building MongoT Docker image for x86_64 architecture..."
+    PKG_NAME="${PKG_NAME_PREFIX}_x86_64.tgz"
+    DOWNLOAD_URL="https://downloads.mongodb.org/mongodb-search-community/$MONGOT_VERSION/$PKG_NAME"
+fi
+
+if [[ -f "$PKG_NAME" ]]; then
+    echo -e "$PKG_NAME exists. Skip downloading."
+else
+    echo -e "Downloading MongoT package: ${GREEN}$PKG_NAME${NC}"
+    curl -OL $DOWNLOAD_URL
+fi
+echo -e "Building MongoT image using tarball: ${GREEN}$PKG_NAME${NC}"
+docker build \
+    --build-arg PKG_NAME=$PKG_NAME \
+    --build-arg MONGOT_DATAPATH=$MONGOT_DATAPATH \
+    --build-arg MONGOT_USER=$MONGOT_USER \
+    ./ -t ${NAMESPACE}/mongot:${MONGOT_VERSION}

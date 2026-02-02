@@ -19,6 +19,25 @@ services:
         limits:
           cpus: '1'
           memory: 1G
+  mongot:
+    image: "${NAMESPACE}/mongot:${MONGOT_VERSION}"
+    hostname: "mongot"
+    volumes:
+      - ${MONGOT_DATAPATH}:/data/mongot
+    ports:
+      - "27028"
+      - "8080"
+    environment:
+      MONGOT_PWD: "${MONGOT_PWD}"
+      MONGOD_HOSTS: "${MONGOD_HOSTS}"
+    restart: always
+    networks:
+      - docker_mongodb
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
 networks:
   docker_mongodb:
     external: true
