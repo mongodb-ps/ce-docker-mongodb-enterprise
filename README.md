@@ -86,7 +86,7 @@ make stop-mongot
 ```
 The 1-node replica set has 2 folders mapped to host folders:
 - `/data/db` -> `$MONGO_DBPATH/mongo_2_1`
-- `/data/log` -> `MONGO_LOGPATH/mongo_2_1`
+- `/data/log` -> `$MONGO_LOGPATH/mongo_2_1`
 
 The `mongot`'s data folder is also mapped:
 - `/data/mongot` -> `$MONGOT_DATAPATH`
