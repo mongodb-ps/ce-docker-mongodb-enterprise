@@ -11,25 +11,26 @@ THIS MATERIAL IS PROVIDED "AS IS" WITHOUT WARRANTY OR LIABILITY.
 This project aims building MongoDB and Ops Manager Docker image. You got the following features:
 - Ops Manager with backup (filesystem store + oplog store). Queryable backup is yet available.
 - Containers with automation agent installed (But no MongoDB deployment).
+- A 1-node replica set and a `mongot` instance connected to it.
 
 ## 2 How To Use
-Everything is auto-wired so you can use it without much manual settings. Follow these steps to start Ops Manager and MongoDB.
+Everything is auto-wired so you can use it with least manual settings. Follow the following steps to start Ops Manager and MongoDB.
 
 ### 2.1 Prerequisites
 The following dependencies are required:
-- Docker
+- Docker + Docker Compose
 - openssl (Generating passwords, keys)
 - python3 (Make API calls)
 
 ### 2.2 Configure
+```bash
+make config
+```
 The guide lets you choosing AppDB and Ops Manager versions, as well as some other useful options. When chooing,
 - The guide only shows the latest version of each series. You can input versions not listed, but make sure they exist.
 - You should choose compatible versions of Ops Manager and AppDB.
 - If you use your own password, make sure it meets the complexity requirement of Ops Manager (Upper / Lower case characters, numbers and symbols.).
 
-```bash
-make config
-```
 If you want to further customize the images, find the extra options in `config.template`.  
 The final configuration will be written into `config`.
 
@@ -42,7 +43,7 @@ To start Ops Manager
 ```bash
 make run-om
 ```
-The first time after starting, the tool will create the admin user. Public and private keys will be appended to `config`.
+The first time after starting, the admin user, as well as the public and private keys will be created. They will be appended to `config`.
 
 To stop Ops Manager
 ```bash
@@ -50,7 +51,7 @@ make stop-om
 ```
 
 ### 2.4 Build & Start MongoDB
-MongoDB image building requires that your Ops Manager is up and running. Because it needs to download the agent binary from Ops Manager.
+MongoDB image building requires that your Ops Manager is up and running. Because it needs to download the agent binary from the Ops Manager.
 ```bash
 make build-mongo
 ```
@@ -64,7 +65,7 @@ make stop-mongo
 ```
 Note in the container we have 2 folers mapped to host folders:
 - `/data/db` -> `$MONGO_DBPATH/mongo_1_<container_index>`
-- `/data/log` -> `MONGO_LOGPATH/mongo_1_<container_index>`
+- `/data/log` -> `$MONGO_LOGPATH/mongo_1_<container_index>`
 
 You should use them for data files and log files when creating deployments.
 
