@@ -38,7 +38,7 @@ help: ## Show this help message
 config:
 	./configure
 reconfig:
-	rm -f config \
+	rm -f config; \
 	./configure
 build-om:
 	cd ops-manager; \
