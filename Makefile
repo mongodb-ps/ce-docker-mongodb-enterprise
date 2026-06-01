@@ -95,7 +95,7 @@ run-om:
 	echo "Creating shared network for Ops Manager and MongoDB"; \
 	docker network inspect docker_mongodb >/dev/null 2>&1 || docker network create docker_mongodb; \
 	echo "Starting Ops Manager..."; \
-	docker-compose up --no-recreate -d --wait; \
+	docker compose up --no-recreate -d --wait; \
 	echo "Ops Manager started. Creating first user..."; \
 	cd ../../; \
 	python3 scripts/create_first_user.py; \
@@ -116,7 +116,7 @@ run-mongo:
 		export MONGO_PORT=$$(($${MONGO_MAPPING_PORT} + $$IDX - 1)); \
 		mkdir -p "$${MONGO_DBPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
 		mkdir -p "$${MONGO_LOGPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
-		docker-compose up --scale mongodb=$$IDX --no-recreate -d; \
+		docker compose up --scale mongodb=$$IDX --no-recreate -d; \
 	done; \
 	cd ../;
 run-mongot:
@@ -131,7 +131,7 @@ run-mongot:
 		export IDX; \
 		mkdir -p "$${MONGO_DBPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
 		mkdir -p "$${MONGO_LOGPATH}/mongo_$${PROJECT_IDX}_$${IDX}"; \
-		docker-compose up --scale mongot_mongo=$$IDX --no-recreate -d; \
+		docker compose up --scale mongot_mongo=$$IDX --no-recreate -d; \
 	done; \
 	cd ../; \
 	echo "Creating MongoDB cluster for search..."; \
@@ -143,7 +143,7 @@ run-mongot:
 stop-om:
 	source config; \
 	cd ops-manager/om; \
-	docker-compose down
+	docker compose down
 stop-mongo:
 	source config; \
 	cd mongo; \
@@ -152,7 +152,7 @@ stop-mongo:
 	export AGENT_API_KEY=$$AGENT_API_KEY_1; \
 	export IDX=1; \
 	export MONGO_PORT=$${MONGO_MAPPING_PORT}; \
-	docker-compose down
+	docker compose down
 stop-mongot:
 	source config; \
 	cd mongot; \
@@ -161,5 +161,5 @@ stop-mongot:
 	export AGENT_API_KEY=$$AGENT_API_KEY_2; \
 	export IDX=1; \
 	export RS_NAME="rs_mongot"; \
-	docker-compose down
+	docker compose down
 stop: stop-mongot stop-mongo stop-om

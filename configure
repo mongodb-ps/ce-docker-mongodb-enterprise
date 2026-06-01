@@ -95,12 +95,6 @@ else
     echo -e "${RED}$CROSS_MARK python3 not found.${NC}"
     ALL_FOUND=false
 fi
-if command -v docker-compose >/dev/null 2>&1; then
-    echo -e "${GREEN}$CHECK_MARK docker-compose found${NC}"
-else
-    echo -e "${RED}$CROSS_MARK docker-compose not found.${NC}"
-    ALL_FOUND=false
-fi
 if [ "$ALL_FOUND" = false ]; then
     echo -e "${RED}Please install the missing commands and try again.${NC}"
     exit 1
