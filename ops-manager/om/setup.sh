@@ -23,8 +23,14 @@ JDK_PKG_NAME="openjdk-${MAJOR_VERSION}-jdk"
 apt install -y $JDK_PKG_NAME;
 
 # Replace JDK with system JDK
+ARCH=$(uname -m)
+if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
+    ARCH=arm64
+else
+    ARCH=amd64
+fi
 rm -rf /mongodb-mms/jdk;
-ln -s /usr/lib/jvm/java-$MAJOR_VERSION-openjdk-arm64 /mongodb-mms/jdk;
+ln -s /usr/lib/jvm/java-$MAJOR_VERSION-openjdk-$ARCH /mongodb-mms/jdk;
 chown mongodb-mms:mongodb-mms -R /mongodb-mms/;
 ls -l /mongodb-mms/jdk/
 
