@@ -32,6 +32,11 @@ case "${OS_TYPE}" in
     exit 1
     ;;
 esac
+if [[ "$OS" == "macOS" ]]; then
+    GREP_PARAMS="-oE"
+else
+    GREP_PARAMS="-oP"
+fi
 echo -e "Detected OS: ${GREEN}$OS${NC}"
 ARCH=$(uname -m)
 if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
@@ -39,7 +44,6 @@ if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
 else
     IS_ARM=false
 fi
-
 echo -e "Is ARM platform: ${GREEN}$IS_ARM${NC}"
 
 generate_password() {
