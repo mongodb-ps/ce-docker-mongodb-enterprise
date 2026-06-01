@@ -7,6 +7,41 @@ NC='\033[0m' # No Color
 CHECK_MARK=$(printf "\xE2\x9C\x94")
 CROSS_MARK=$(printf "\xE2\x9C\x98")
 
+# check OS and architecture
+OS_TYPE="$(uname -s | tr '[:upper:]' '[:lower:]')"
+case "${OS_TYPE}" in
+  linux*)
+    if grep -qE "(Microsoft|microsoft-standard-WSL)" /proc/version 2>/dev/null; then
+      OS=WSL
+      echo "Detected operating system: Windows Subsystem for Linux (WSL)"
+    else
+      OS=Linux
+      echo "Detected operating system: Linux"
+    fi
+    ;;
+    
+  darwin*)
+    OS=macOS
+    echo "Detected operating system: macOS"
+    ;;
+    
+  msys* | cygwin* | mingw*)
+    OS=Windows
+    echo "Detected operating system: Windows (Git Bash / Cygwin environment)"
+    ;;
+    
+  *)
+    OS=Unknown
+    echo "Unknown operating system: ${OS_TYPE}"
+    ;;
+esac
+ARCH=$(uname -m)
+if [[ "$OS" == "Windows" || "$OS" == "Linux" || "$OS" == "WSL" ]]; then
+    GREP_PARAMS=-oP
+else
+    GREP_PARAMS=-oE
+fi
+
 generate_password() {
     local length=${1:-16}
     local password=""
@@ -93,12 +128,12 @@ ROOT_PWD=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 16)
 
 # Check available Ops Manager versions
 echo "Checking available Ops Manager versions..."
-DOWNLOAD_LINKS=$(curl -sS https://www.mongodb.com/try/download/ops-manager/releases/archive | grep -oE "https://downloads.mongodb.com/on-prem-mms/tar/mongodb-mms-\d[-a-zA-Z0-9._]+" | sort -Vr | uniq)
-LATEST_OM_VERSIONS=$(echo "$DOWNLOAD_LINKS" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+" | awk -F. '{count[$1]++; if(count[$1] <= 1) print $0}' | head -n 3)
+DOWNLOAD_LINKS=$(curl -sS https://www.mongodb.com/try/download/ops-manager/releases/archive | grep $GREP_PARAMS "https://downloads.mongodb.com/on-prem-mms/tar/mongodb-mms-\d[-a-zA-Z0-9._]+" | sort -Vr | uniq)
+LATEST_OM_VERSIONS=$(echo "$DOWNLOAD_LINKS" | grep $GREP_PARAMS "[0-9]+\.[0-9]+\.[0-9]+" | awk -F. '{count[$1]++; if(count[$1] <= 1) print $0}' | head -n 3)
 echo "Latest Ops Manager Versions:"
 echo -e "${GREEN}$LATEST_OM_VERSIONS${NC}"
 # Extract latest version number
-LATEST_OM_VERSION=$(echo "$LATEST_OM_VERSIONS" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+" | head -n 1)
+LATEST_OM_VERSION=$(echo "$LATEST_OM_VERSIONS" | grep $GREP_PARAMS "[0-9]+\.[0-9]+\.[0-9]+" | head -n 1)
 read -p "Choose Ops Manager version ($LATEST_OM_VERSION): " OM_VERSION
 if [[ -z $OM_VERSION ]]; then
     OM_VERSION="$LATEST_OM_VERSION"
