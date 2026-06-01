@@ -13,34 +13,34 @@ case "${OS_TYPE}" in
   linux*)
     if grep -qE "(Microsoft|microsoft-standard-WSL)" /proc/version 2>/dev/null; then
       OS=WSL
-      echo "Detected operating system: Windows Subsystem for Linux (WSL)"
     else
       OS=Linux
-      echo "Detected operating system: Linux"
     fi
     ;;
     
   darwin*)
     OS=macOS
-    echo "Detected operating system: macOS"
     ;;
     
   msys* | cygwin* | mingw*)
     OS=Windows
-    echo "Detected operating system: Windows (Git Bash / Cygwin environment)"
     ;;
     
   *)
     OS=Unknown
-    echo "Unknown operating system: ${OS_TYPE}"
+    echo -e "${RED}Unknown operating system: ${OS_TYPE}${NC}"
+    exit 1
     ;;
 esac
+echo -e "Detected OS: ${GREEN}$OS${NC}"
 ARCH=$(uname -m)
-if [[ "$OS" == "Windows" || "$OS" == "Linux" || "$OS" == "WSL" ]]; then
-    GREP_PARAMS=-oP
+if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
+    IS_ARM=true
 else
-    GREP_PARAMS=-oE
+    IS_ARM=false
 fi
+
+echo -e "Is ARM platform: ${GREEN}$IS_ARM${NC}"
 
 generate_password() {
     local length=${1:-16}
@@ -95,16 +95,6 @@ if [ "$ALL_FOUND" = false ]; then
     echo -e "${RED}Please install the missing commands and try again.${NC}"
     exit 1
 fi
-
-echo "Detecting system architecture..."
-ARCH=$(uname -m)
-if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
-    IS_ARM=true
-else
-    IS_ARM=false
-fi
-
-echo -e "Is ARM platform: ${GREEN}$IS_ARM${NC}"
 
 echo "Checking available MongoDB versions..."
 # Fetch available MongoDB versions from Docker Hub
@@ -171,6 +161,7 @@ fi
 MONGOT_PWD=$(generate_password 16)
 
 echo "#!/bin/bash" > config
+echo "export OS=$OS" >> config
 echo "export IS_ARM=$IS_ARM" >> config
 echo "export NAMESPACE=$DEFAULT_NAMESPACE" >> config
 echo "export HOST_PATH=$HOST_PATH" >> config
