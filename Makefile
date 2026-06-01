@@ -1,3 +1,4 @@
+SHELL := /bin/bash
 PROJECT_NAME = mongodb-enterprise-docker
 .SILENT:
 .PHONY: config reconfig build-om build-mongo build rebuild clean-om clean-mongo clean-mongot clean destroy run-om stop-om run-mongo stop-mongo run-mongot stop-mongot stop help
