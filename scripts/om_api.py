@@ -8,7 +8,8 @@ HEADERS = {
     "Accept": "application/json",
 }
 OM_MAPPING_PORT = os.getenv("OM_MAPPING_PORT", "8080")
-OM_URL = f"http://host.docker.internal:{OM_MAPPING_PORT}"
+HOSTNAME = os.getenv("HOSTNAME", "localhost")
+OM_URL = f"{HOSTNAME}:{OM_MAPPING_PORT}"
 
 def api_post_anonymous(url, data, headers=None):
     """Make an anonymous API POST request to the given URL."""

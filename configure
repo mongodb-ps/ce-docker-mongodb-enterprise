@@ -196,6 +196,7 @@ echo "export MONGOT_USER=$DEFAULT_MONGOT_USER" >> config
 echo "export MONGOT_PWD='$MONGOT_PWD'" >> config
 echo "export MONGOT_DATAPATH=$HOST_PATH$DEFAULT_MONGOT_DATAPATH" >> config
 echo "export MONGOT_VERSION=$DEFAULT_MONGOT_VERSION" >> config
+echo "export HOSTNAME=$(hostname -f)" >> config
 chmod +x config
 
 echo -e "Configuration saved to file ${GREEN}config${NC}."
