@@ -8,12 +8,12 @@ services:
     ports:
       - "${MONGO_PORT}:27017"
     environment:
-      OM_URL: "http://${HOSTNAME}:${OM_MAPPING_PORT}"
+      OM_URL: "http://${OM_HOSTNAME}:${OM_MAPPING_PORT}"
       PROJECT_ID: "${PROJECT_ID}"
       AGENT_API_KEY: "${AGENT_API_KEY}"
     restart: always
     extra_hosts:
-      - "${HOSTNAME}:host-gateway"
+      - "${OM_HOSTNAME}:host-gateway"
     networks:
       - docker_mongodb
     deploy:

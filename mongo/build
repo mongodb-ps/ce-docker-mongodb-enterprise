@@ -23,13 +23,13 @@ echo -e "Setting up Ops Manager organization and project..."
 AGENT_VERSION=$AGENT_VERSION_1
 
 # Build MongoDB image.
-OM_URL="http://$HOSTNAME:$OM_MAPPING_PORT"
+OM_URL="http://$OM_HOSTNAME:$OM_MAPPING_PORT"
 echo -e "Building MongoDB image: ${GREEN}${NAMESPACE}/mongodb:$OM_VERSION${NC} for Ops Manager ${GREEN}$OM_VERSION${NC}."
 docker build \
     --build-arg AGENT_VERSION=$AGENT_VERSION \
     --build-arg OM_URL=$OM_URL \
     --build-arg IS_ARM=$IS_ARM \
-    --add-host $HOSTNAME:host-gateway \
+    --add-host $OM_HOSTNAME:host-gateway \
     ./ -t ${NAMESPACE}/mongodb:$OM_VERSION
 if [[ $? -ne 0 ]]; then
     echo -e "${RED}${CROSS_MARK} Failed to build MongoDB Enterprise Server image.${NC}"
