@@ -21,6 +21,7 @@ The following dependencies are required:
 - Docker + Docker Compose
 - openssl (Generating passwords, keys)
 - python3 (Make API calls)
+- dnsutils (`dig` command is needed)
 
 ### 2.2 Configure
 ```bash
