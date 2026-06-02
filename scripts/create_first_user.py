@@ -10,7 +10,7 @@ first_name = os.getenv("OM_ADMIN_FIRSTNAME", "Admin")
 last_name = os.getenv("OM_ADMIN_LASTNAME", "User")
 local_ip = os.getenv("LOCAL_IP", "localhost")
 
-WHITELIST_IPS = ["172.18.0.1", "172.17.0.1", "192.168.65.1", "127.0.0.1", f"{local_ip}"]
+WHITELIST_IPS = ["172.18.0.1", "172.17.0.1", "192.168.65.1", f"{local_ip}"]
 WHITELISTS = "&".join(f"whitelist={ip}" for ip in WHITELIST_IPS)
 FIRST_USER_URL = f"{OM_URL}/api/public/v1.0/unauth/users?{WHITELISTS}"
 
