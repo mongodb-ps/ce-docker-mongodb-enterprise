@@ -12,6 +12,8 @@ export DEFAULT_APPDB_DBPATH="/appdb"
 # Default root user for AppDB
 export DEFAULT_ROOT_USER="root"
 
+# Default Ops Manager hostname
+export DEFAULT_OM_HOSTNAME=`hostname -f`
 # Map Ops Manager to this port on host
 export DEFAULT_OM_MAPPING_PORT=8080
 # Map Ops Manager releases storage path

@@ -183,7 +183,8 @@ echo "export ROOT_PWD=$ROOT_PWD" >> config
 echo "export OM_VERSION=$OM_VERSION" >> config
 echo "export OM_DOWNLOAD_LINK=$OM_DOWNLOAD_LINK" >> config
 echo "export OM_PKG_NAME=$OM_PKG_NAME" >> config
-echo "export OM_HOSTNAME=$(hostname -f)" >> config
+echo "export OM_HOSTNAME=$DEFAULT_OM_HOSTNAME" >> config
+echo "export LOCAL_IP=$(dig $DEFAULT_OM_HOSTNAME +short | head -n 1)" >> config
 echo "export OM_MAPPING_PORT=$OM_MAPPING_PORT" >> config
 echo "export RELEASES=$HOST_PATH$DEFAULT_RELEASES" >> config
 echo "export OM_LOGS=$HOST_PATH$DEFAULT_OM_LOGS" >> config
@@ -203,7 +204,6 @@ echo "export MONGOT_USER=$DEFAULT_MONGOT_USER" >> config
 echo "export MONGOT_PWD='$MONGOT_PWD'" >> config
 echo "export MONGOT_DATAPATH=$HOST_PATH$DEFAULT_MONGOT_DATAPATH" >> config
 echo "export MONGOT_VERSION=$DEFAULT_MONGOT_VERSION" >> config
-echo "export LOCAL_IP=$(dig $OM_HOSTNAME +short | head -n 1)" >> config
 chmod +x config
 
 echo -e "Configuration saved to file ${GREEN}config${NC}."
