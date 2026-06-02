@@ -21,7 +21,7 @@ The following dependencies are required:
 - Docker + Docker Compose
 - openssl (Generating passwords, keys)
 - python3 (Make API calls)
-- dnsutils (`dig` command is needed)
+- dnsutils (`dig` command is needed to find host IP)
 
 ### 2.2 Configure
 ```bash
@@ -34,6 +34,9 @@ The guide lets you choosing AppDB and Ops Manager versions, as well as some othe
 
 If you want to further customize the images, find the extra options in `config.template`.  
 The final configuration will be written into `config`.
+
+**Known issue:**
+- By default the OM URL is set to `hostname -f`. However, for MacOS users, the hostname sometimes changes, which breaks connectivity. A workaround is to manually map the hostname to `127.0.0.1` in `/etc/hosts`.
 
 ### 2.3 Build & Start Ops Manager
 This will build the Ops Manager image and pull AppDB image.

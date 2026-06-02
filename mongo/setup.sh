@@ -9,11 +9,10 @@ yum install -y cyrus-sasl cyrus-sasl-gssapi cyrus-sasl-plain krb5-libs libcurl o
 cd /tmp
 if [[ "$IS_ARM" == "true" ]]; then
     AGENT_PKG_NAME="mongodb-mms-automation-agent-$AGENT_VERSION-1.amzn2_aarch64"
-    AGENT_URL="$OM_URL/download/agent/automation/$AGENT_PKG_NAME.tar.gz"
 else
-    AGENT_PKG_NAME="mongodb-mms-automation-agent-$AGENT_VERSION-1.amzn2_x86_64"
-    AGENT_URL="$OM_URL/download/agent/automation/$AGENT_PKG_NAME.tar.gz"
+    AGENT_PKG_NAME="mongodb-mms-automation-agent-$AGENT_VERSION-1.amazon2023_x86_64"
 fi
+AGENT_URL="$OM_URL/download/agent/automation/$AGENT_PKG_NAME.tar.gz"
 curl -OL $AGENT_URL
 tar -zxvf $AGENT_PKG_NAME.tar.gz -C /opt/
 mv /opt/$AGENT_PKG_NAME /opt/mongodb-mms-automation
