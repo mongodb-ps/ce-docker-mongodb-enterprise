@@ -132,6 +132,7 @@ make destroy
    ```
    Failed to update automation config: {"detail":"IP address 185.199.111.133 is not allowed to access this resource.","error":403,"errorCode":"IP_ADDRESS_NOT_ON_ACCESS_LIST","parameters":["185.199.111.133"],"reason":"Forbidden"}
    ```
+1. Currently MongoDB doesn't work with Linux kernal 6.19 and later. Consider using older kernal.
 
 ### 3.2 Other Information
 - The Ops Manager image is built based on `ubuntu:jammy`.
