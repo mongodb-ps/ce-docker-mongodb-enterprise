@@ -15,7 +15,7 @@ syncSource:
       tls: false
       readPreference: primaryPreferred
 storage:
-   dataPath: ${MONGOT_DATAPATH}
+   dataPath: /data/mongot
 server:
    grpc:
       address: "0.0.0.0:27028"
