@@ -11,7 +11,7 @@ if [[ "$IS_ARM" == "true" ]]; then
     AGENT_PKG_NAME="mongodb-mms-automation-agent-$AGENT_VERSION-1.amzn2_aarch64"
     AGENT_URL="$OM_URL/download/agent/automation/$AGENT_PKG_NAME.tar.gz"
 else
-    AGENT_PKG_NAME="mongodb-mms-automation-agent-$AGENT_VERSION-1.rhel7_x86_64"
+    AGENT_PKG_NAME="mongodb-mms-automation-agent-$AGENT_VERSION-1.amzn2_x86_64"
     AGENT_URL="$OM_URL/download/agent/automation/$AGENT_PKG_NAME.tar.gz"
 fi
 curl -OL $AGENT_URL
