@@ -39,4 +39,5 @@ docker build \
     --build-arg PKG_NAME=$PKG_NAME \
     --build-arg MONGOT_DATAPATH=$MONGOT_DATAPATH \
     --build-arg MONGOT_USER=$MONGOT_USER \
+    --add-host $HOSTNAME:host-gateway \
     ./ -t ${NAMESPACE}/mongot:${MONGOT_VERSION}
