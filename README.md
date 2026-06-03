@@ -137,5 +137,5 @@ make destroy
 ### 3.2 Other Information
 - The Ops Manager image is built based on `ubuntu:jammy`.
 - Th AppDB is using MongoDB official image `mongodb/mongodb-enterprise-server`.
-- The MongoDB image is built based on `amazonlinux:2` for better backwards compatibility.
+- The MongoDB image is built based on `amazonlinux:2023` for better backwards compatibility.
 - Ops Manager v6, v7 and v8 are tested and should work. Other versions are not verified.
