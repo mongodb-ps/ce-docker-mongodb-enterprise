@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Install dependencies
 yum update -y
-yum install -y cyrus-sasl cyrus-sasl-gssapi cyrus-sasl-plain krb5-libs libcurl openldap openssl xz-libs lm_sensors-libs net-snmp tar sudo
+yum install -y cyrus-sasl cyrus-sasl-gssapi cyrus-sasl-plain krb5-libs openldap openssl xz-libs sudo tar hostname procps-ng
 
 # Download automation agent
 cd /tmp

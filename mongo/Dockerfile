@@ -1,5 +1,5 @@
 # Pull base image.
-FROM amazonlinux:2
+FROM amazonlinux:2023
 
 ARG OM_URL
 ARG AGENT_VERSION
