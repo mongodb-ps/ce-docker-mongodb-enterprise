@@ -46,7 +46,7 @@ if [[ $? -ne 0 ]]; then
     echo -e "${RED}${CROSS_MARK} Failed to build MongoDB Ops Manager image.${NC}"
     exit 1
 fi
-echo -e "${GREEN}${CHECK_MARK} MongoDB Ops Manager image built successfully.${NC}"
+echo -e "${GREEN}${CHECK_MARK} MongoDB Ops Manager image building done.${NC}"
 cd ..
 
 # Build Backup Daemon image
@@ -60,8 +60,11 @@ if [[ -z "`docker images -q ${NAMESPACE}/backup-daemon:${OM_VERSION}`" ]]; then
         echo -e "${RED}${CROSS_MARK} Failed to build MongoDB Backup Daemon image.${NC}"
         exit 1
     fi
-    echo -e "${GREEN}${CHECK_MARK} MongoDB Backup Daemon image built successfully.${NC}"
+    echo -e "${GREEN}${CHECK_MARK} MongoDB Backup Daemon image building done.${NC}"
     cd ../
 else
     echo -e "${GREEN}${CHECK_MARK} MongoDB Backup Daemon image already exists. Skip building.${NC}"
 fi
+
+echo -e "${GREEN}What's next?${NC}"
+echo -e '- Run "make run-om" to start Ops Manager instance.'

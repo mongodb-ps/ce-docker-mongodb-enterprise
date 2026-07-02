@@ -41,3 +41,7 @@ docker build \
     --build-arg MONGOT_USER=$MONGOT_USER \
     --add-host $OM_HOSTNAME:host-gateway \
     ./ -t ${NAMESPACE}/mongot:${MONGOT_VERSION}
+
+echo -e "${GREEN}${CHECK_MARK} MongoDB mongot image building done.${NC}"
+echo -e "${GREEN}What's next?${NC}"
+echo '- Run "make run-mongot" to start mongot containers'

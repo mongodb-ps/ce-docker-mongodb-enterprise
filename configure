@@ -209,3 +209,6 @@ chmod +x config
 echo -e "Configuration saved to file ${GREEN}config${NC}."
 echo -e "Your AppDB username / password: ${GREEN}$DEFAULT_ROOT_USER / $ROOT_PWD${NC}"
 echo -e "Your Ops Manager admin username / password: ${GREEN}$OM_ADMIN_EMAIL / $OM_ADMIN_PWD${NC}"
+
+echo -e "${GREEN}What's next?${NC}"
+echo -e '- Run "make build-om" to build the Ops Manager image.'

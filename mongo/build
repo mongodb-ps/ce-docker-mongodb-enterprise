@@ -35,4 +35,6 @@ if [[ $? -ne 0 ]]; then
     echo -e "${RED}${CROSS_MARK} Failed to build MongoDB Enterprise Server image.${NC}"
     exit 1
 fi
-echo -e "${GREEN}${CHECK_MARK} MongoDB Enterprise Server image built successfully.${NC}"
+echo -e "${GREEN}${CHECK_MARK} MongoDB Enterprise Server image building done.${NC}"
+echo -e "${GREEN}What's next?${NC}"
+echo '- Run "make run-mongo" to start MongoDB containers'
