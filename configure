@@ -95,6 +95,12 @@ else
     echo -e "${RED}$CROSS_MARK python3 not found.${NC}"
     ALL_FOUND=false
 fi
+if python3 -c "import requests" >/dev/null 2>&1; then
+    echo -e "${GREEN}$CHECK_MARK requests library found${NC}"
+else
+    echo -e "${RED}$CROSS_MARK requests library not found.${NC}"
+    ALL_FOUND=false
+fi
 if command -v dig >/dev/null 2>&1; then
     echo -e "${GREEN}$CHECK_MARK dig found${NC}"
 else
