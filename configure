@@ -3,6 +3,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
+GRAY='\033[0;90m'
 NC='\033[0m' # No Color
 CHECK_MARK=$(printf "\xE2\x9C\x94")
 CROSS_MARK=$(printf "\xE2\x9C\x98")
@@ -159,6 +160,7 @@ if [[ -z $OM_ADMIN_EMAIL ]]; then
     OM_ADMIN_EMAIL=$DEFAULT_OM_ADMIN_EMAIL
 fi
 
+echo -e "${GRAY}If you enter your own password, please make sure it meets the Ops Manager password policy.${NC}"
 read -p "Enter password for the Ops Manager admin (will be generated if left blank): " OM_ADMIN_PWD
 if [[ -z $OM_ADMIN_PWD ]]; then
     OM_ADMIN_PWD="$(generate_password 16)"
