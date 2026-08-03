@@ -7,3 +7,4 @@ mongodb-mms*
 gen.key
 *.pyc'
 __pycache__/
+.qwen

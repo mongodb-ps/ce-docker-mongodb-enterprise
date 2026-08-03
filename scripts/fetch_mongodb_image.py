@@ -12,7 +12,7 @@ def fetch_mongodb_image():
         available_tags = sorted([
             item["name"]
             for item in results
-            if re.match(r"^[0-9]+\.[0-9]+\.[0-9]+-ubuntu\d+$", item["name"])
+            if re.match(r"^[0-9]+\.[0-9]+\.[0-9]+-ubuntu\d+", item["name"])
             and item["tag_status"] == "active"
         ], reverse=True)
         for tag in available_tags:
