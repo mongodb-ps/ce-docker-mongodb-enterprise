@@ -8,6 +8,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: "${ROOT_USER}"
       MONGO_INITDB_ROOT_PASSWORD: "${ROOT_PWD}"
+      MONGODB_INITDB_ROOT_USERNAME: "${ROOT_USER}"
+      MONGODB_INITDB_ROOT_PASSWORD: "${ROOT_PWD}"
     volumes:
       - ${APPDB_DBPATH}:/data/db
     networks:
