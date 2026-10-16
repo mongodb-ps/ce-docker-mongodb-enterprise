@@ -110,10 +110,9 @@ run-om:
 	python3 scripts/enable_daemon.py; \
 	echo "Creating oplog store and file system store..."; \
 	python3 scripts/create_store.py; \
-	cd ../; \
-	echo -e "\033[0;32mWhat's next?\033[0m"
-	echo '- Run "make build-mongo" to build MongoDB image'
-	echo '- Run "make build-mongot" to build mongot image'
+	echo -e "\033[0;32mWhat's next?\033[0m"; \
+	echo '- Run "make build-mongo" to build MongoDB image'; \
+	echo '- Run "make build-mongot" to build mongot image'; \
 	echo "- Access Ops Manager in your browser: http://`hostname -f`:$${OM_MAPPING_PORT}"
 run-mongo:
 	source config; \
