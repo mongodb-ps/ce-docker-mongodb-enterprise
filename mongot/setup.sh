@@ -10,10 +10,11 @@ cat > /home/mongot/mongot.conf <<EOF
 syncSource:
    replicaSet:
       hostAndPort: mongo_2_1:27017
-      username: ${MONGOT_USER}
-      passwordFile: /home/mongot/passwordFile
-      tls: false
-      readPreference: primaryPreferred
+      scramAuth:
+         username: ${MONGOT_USER}
+         passwordFile: /home/mongot/passwordFile
+         tls:
+            enabled: false
 storage:
    dataPath: /data/mongot
 server:
