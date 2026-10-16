@@ -121,21 +121,17 @@ make destroy
 
 ## 3 Additional Information
 ### 3.1 Known Issues
-1. Ops Manager requires at least 4GB to start (recommended 6GB). Adjust RAM limit in `Settings->Resources->Advanced` accordingly if necessary.
-1. On my M1 sometimes docker service crash for no reason and can't even be restarted. This seems like a unresolved issue https://github.com/docker/for-mac/issues/5283The. The following command can help you kill docker:
-    ```bash
-    kill `ps aux | grep docker | awk '{print $2}'`
-    ```
-1. After restarting docker service, the IP addresses may change which may confuse OM and cause monitoring issues. Go to More->Host Mappings, clear all mappings, wait for a few minutes and the problem should be gone.
-1. SMTP configuration is a dummy one. It will not work.
-1. During my test I sometimes get the error after starting Ops Manager for the first time. For some reason sometimes Docker tend to proxy your request in a weird way. Not sure how this happens but usually restart Docker service will fix the problem.
+1. Ops Manager requires at least 6GB to start (recommended 8GB). Adjust RAM limit in `Settings->Resources->Advanced` accordingly if necessary.
+2. After restarting docker service, the IP addresses may change which may confuse OM and cause monitoring issues. Go to More->Host Mappings, clear all mappings, wait for a few minutes and the problem should be gone.
+3. SMTP configuration is a dummy one. It will not work.
+4. During my test I sometimes get the error after starting Ops Manager for the first time. For some reason sometimes Docker tend to proxy your request in a weird way. Not sure how this happens but usually restart Docker service will fix the problem.
    ```
    Failed to update automation config: {"detail":"IP address 185.199.111.133 is not allowed to access this resource.","error":403,"errorCode":"IP_ADDRESS_NOT_ON_ACCESS_LIST","parameters":["185.199.111.133"],"reason":"Forbidden"}
    ```
-1. Currently MongoDB doesn't work with Linux kernal 6.19 and later. Consider using older kernal.
+5. Currently MongoDB doesn't work with Linux kernal 6.19 and later. Consider using older kernal.
 
 ### 3.2 Other Information
 - The Ops Manager image is built based on `ubuntu:jammy`.
 - Th AppDB is using MongoDB official image `mongodb/mongodb-enterprise-server`.
 - The MongoDB image is built based on `amazonlinux:2023` for better backwards compatibility.
-- Ops Manager v6, v7 and v8 are tested and should work. Other versions are not verified.
+- Ops Manager v6 ~ v9 are tested and should work. Other versions are not verified.
